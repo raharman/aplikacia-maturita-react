@@ -1,7 +1,52 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native'
-import React from 'react'
+import { Button, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import { auth } from '../firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import ResetScreen from './ResetScreen';
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if(user){
+        navigation.replace("Home")
+      }
+    })
+
+    return unsubscribe
+  }, [])
+
+  const SignUp = () => {
+    
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((res)=>{
+      console.log(res);
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
+  const SignIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then(()=>{})
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
+
+  const ResetPassword = (email) => {
+    sendPasswordResetEmail(auth, email)
+    .then(() => {})
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
+
   return (
     <KeyboardAvoidingView
         style={styles.container}
@@ -10,18 +55,44 @@ const LoginScreen = () => {
         <View style={styles.inputContainer}>
             <TextInput
             placeholder="Email"
-            //value={ }
-            //onChangeText={text => }
+            value={email}
+            onChangeText={text => setEmail(text)}
             style={styles.input}
             />
             <TextInput
             placeholder="Password"
-            //value={ }
-            //onChangeText={text => }
+            value={password}
+            onChangeText={text => setPassword(text)}
             style={styles.input}
             secureTextEntry
-            />
-            
+            />   
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={SignIn}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={SignUp}
+            style={[styles.button, styles.buttonOutline]} 
+          >
+            <Text style={styles.buttonOutlineText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.replace('Reset')}
+            style={[styles.button, styles.buttonOutline]} 
+          >
+            <Text style={styles.buttonOutlineText}>Reset</Text>
+          </TouchableOpacity>
         </View>
     </KeyboardAvoidingView>
   )
@@ -30,9 +101,55 @@ const LoginScreen = () => {
 export default LoginScreen
 
 const styles = StyleSheet.create({
-     container: {
-         flex: 1,
-         justifyContent: 'center',
-         alignItems: 'center',
-     }
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    inputContainer:{
+      width: '80%'
+    },
+
+    input:{
+      	backgroundColor: 'white',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        marginTop: 5,
+    },
+
+    buttonContainer:{
+      width: '60%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 40,
+    },
+
+    button:{
+      backgroundColor: 'gray',
+      width: '100%',
+      padding: 15,
+      borderRadius: 10,
+      alignItems: 'center',
+    },
+
+    buttonText:{
+      color: 'white',
+      fontWeight: '700',
+      fontSize: 16,
+    },
+
+    buttonOutline:{
+      backgroundColor: 'white',
+      marginTop: 5,
+      borderColor: 'gray',
+      borderWidth: 2,
+    },
+
+    buttonOutlineText:{
+      color: 'gray',
+      fontWeight: '700',
+      fontSize: 16,
+    },
 })
