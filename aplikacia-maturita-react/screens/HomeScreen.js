@@ -16,11 +16,11 @@ const HomeScreen = () => {
     
     const getTopics = async () => {
       const data = await getDocs(topicsCollectionRef);
-      setTopics(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
 
-    getTopics()
-  }, [])
+    getTopics();
+  }, []);
 
   const SignOut = () => {
     signOut(auth)
@@ -44,10 +44,11 @@ const HomeScreen = () => {
       <View>
       {topics.map((topic) => { 
           return(
-            <Text>
+            <Text key={topic.id}>
               <h1>Meno: {topic.name}</h1>
               <p>Text: {topic.text}</p>
               <p>Typ: {topic.type}</p>
+              <p>Id: {topic.id}</p>
             </Text>
           );
         })}
