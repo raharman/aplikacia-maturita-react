@@ -88,7 +88,7 @@ const LoginScreen = () => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={() => navigation.replace('Reset')}
+            onPress={() => navigation.navigate('Reset')}
             style={[styles.button, styles.buttonOutline]} 
           >
             <Text style={styles.buttonOutlineText}>Reset</Text>
