@@ -1,9 +1,8 @@
-import { Button, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { auth } from '../firebase'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import ResetScreen from './ResetScreen';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -34,14 +33,6 @@ const LoginScreen = () => {
   const SignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
     .then(()=>{})
-    .catch((err)=>{
-      console.log(err);
-    })
-  }
-
-  const ResetPassword = (email) => {
-    sendPasswordResetEmail(auth, email)
-    .then(() => {})
     .catch((err)=>{
       console.log(err);
     })

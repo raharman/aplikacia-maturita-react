@@ -1,11 +1,43 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
+import { auth } from '../firebase'
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const ResetScreen = () => {
+
+  const [email, setEmail] = useState('')
+
+  const ResetPassword = () => {
+    sendPasswordResetEmail(auth, email)
+    .then(() => {})
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
+
   return (
-    <View>
-        
-    </View>
+    <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+    >
+        <View style={styles.inputContainer}>
+            <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
+            style={styles.input}
+            />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={ResetPassword}
+            style={[styles.button, styles.buttonOutline]} 
+          >
+            <Text style={styles.buttonOutlineText}>Reset</Text>
+          </TouchableOpacity>
+        </View>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -45,8 +77,15 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
 
-    buttonText:{
-      color: 'white',
+    buttonOutline:{
+      backgroundColor: 'white',
+      marginTop: 5,
+      borderColor: 'gray',
+      borderWidth: 2,
+    },
+
+    buttonOutlineText:{
+      color: 'gray',
       fontWeight: '700',
       fontSize: 16,
     },
