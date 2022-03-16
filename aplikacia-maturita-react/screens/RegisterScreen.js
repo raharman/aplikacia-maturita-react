@@ -4,7 +4,7 @@ import { auth } from '../firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
@@ -27,14 +27,6 @@ const LoginScreen = () => {
     })
     .catch((err)=>{
       console.log(err)
-    })
-  }
-
-  const SignIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-    .then(()=>{})
-    .catch((err)=>{
-      console.log(err);
     })
   }
 
@@ -61,35 +53,17 @@ const LoginScreen = () => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={SignIn}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
+            onPress={SignUp}
             style={[styles.button, styles.buttonOutline]} 
           >
             <Text style={styles.buttonOutlineText}>Register</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Reset')}
-            style={[styles.button, styles.buttonOutline]} 
-          >
-            <Text style={styles.buttonOutlineText}>Reset</Text>
           </TouchableOpacity>
         </View>
     </KeyboardAvoidingView>
   )
 }
 
-export default LoginScreen
+export default RegisterScreen
 
 const styles = StyleSheet.create({
     container: {

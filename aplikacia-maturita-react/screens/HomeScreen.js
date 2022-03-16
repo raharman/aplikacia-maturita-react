@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../firebase';
@@ -33,27 +33,29 @@ const HomeScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity
-        onPress={SignOut}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity>
-      <View>
-      {topics.map((topic) => { 
-          return(
-            <Text key={topic.id}>
-              <h1>Meno: {topic.name}</h1>
-              <p>Text: {topic.text}</p>
-              <p>Typ: {topic.type}</p>
-              <p>Id: {topic.id}</p>
-            </Text>
-          );
-        })}
+    <ScrollView>
+      <View style={styles.container}>
+        <Text>Email: {auth.currentUser?.email}</Text>
+        <TouchableOpacity
+          onPress={SignOut}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </TouchableOpacity>
+        <View style={styles.container}>
+            {topics.map((topic) => { 
+              return(            
+                <Text key={topic.id}>
+                <h1>Meno: {topic.name}</h1>
+                <p>Text: {topic.text}</p>
+                <p>Typ: {topic.type}</p>
+                <p>Id: {topic.id}</p>
+                </Text>
+            );
+          })}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -80,4 +82,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
   },
+
+
 })
