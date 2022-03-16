@@ -8,6 +8,7 @@ import TopScreen from './screens/TopScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Uvod from './screens/Uvod';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
+        initialRouteName="Uvod"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -42,6 +44,7 @@ export default function App() {
         <Tab.Screen name="Top" component={TopScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen options={{ headerShown: false }} name="Uvod" component={Uvod} />
       </Tab.Navigator>
     </NavigationContainer>
   );
