@@ -5,9 +5,10 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigation = useNavigation()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -19,20 +20,25 @@ const LoginScreen = () => {
     return unsubscribe
   }, [])
 
+  /*
   const SignUp = () => {
     
     createUserWithEmailAndPassword(auth, email, password)
     .then((res)=>{
+      setIsSignedIn(true);
       console.log(res);
     })
     .catch((err)=>{
       console.log(err)
     })
   }
+  */
 
   const SignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
-    .then(()=>{})
+    .then(()=>{
+
+     })
     .catch((err)=>{
       console.log(err);
     })
