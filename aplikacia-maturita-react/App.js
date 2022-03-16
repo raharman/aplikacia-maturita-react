@@ -6,17 +6,19 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ResetScreen from './screens/ResetScreen';
+import Uvod from './screens/Uvod';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Uvod">
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Reset" component={ResetScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="Uvod" component={Uvod} />
       </Stack.Navigator>
     </NavigationContainer>
   );
