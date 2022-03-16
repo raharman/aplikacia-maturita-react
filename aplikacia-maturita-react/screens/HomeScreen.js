@@ -2,7 +2,6 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import React, {useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../firebase';
-import { signOut } from "firebase/auth";
 import { collection, getDocs } from 'firebase/firestore';
 
 const HomeScreen = () => {
@@ -22,26 +21,19 @@ const HomeScreen = () => {
     getTopics();
   }, []);
 
-  const SignOut = () => {
-    signOut(auth)
-    .then(() =>{
-      navigation.replace("Login")
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  }
-
   return (
+
     <ScrollView>
       <View style={styles.container}>
         <Text>Email: {auth.currentUser?.email}</Text>
+        {/*
         <TouchableOpacity
           onPress={SignOut}
           style={styles.button}
-        >
+        >      
           <Text style={styles.buttonText}>Sign Out</Text>
         </TouchableOpacity>
+  */}
         <View style={styles.container}>
             {topics.map((topic) => { 
               return(            
@@ -82,6 +74,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
   },
-
-
 })
