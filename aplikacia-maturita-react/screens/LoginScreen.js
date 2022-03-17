@@ -5,34 +5,40 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigation = useNavigation()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  const navigation = useNavigation();
 
-  useEffect(() => {
+  /* useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if(user){
-        navigation.replace("Home")
+        navigation.navigate("Home")
       }
     })
 
     return unsubscribe
-  }, [])
+  }, []) */
 
+  /*
   const SignUp = () => {
     
     createUserWithEmailAndPassword(auth, email, password)
     .then((res)=>{
+      setIsSignedIn(true);
       console.log(res);
     })
     .catch((err)=>{
       console.log(err)
     })
   }
+  */
 
   const SignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
-    .then(()=>{})
+    .then(()=>{
+
+     })
     .catch((err)=>{
       console.log(err);
     })
