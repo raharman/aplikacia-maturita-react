@@ -9,8 +9,8 @@ const SettingsScreen = () => {
   const [isEnabledM, setIsEnabledM] = useState(false);
   const toggleDarkMode = () => setIsEnabledM((previousState) => !previousState);
 
-  let color1 = "#f5dd4b";
-  let color2 = "#f4f3f4";
+  let color1 = "white";
+  let color2 = "#F0EDEE";
 
   return (
     <View style={styles.container}>
@@ -20,7 +20,7 @@ const SettingsScreen = () => {
       <View style={styles.rect}>
         <Text style={styles.text}>Notifikácie</Text>
         <Switch
-          trackColor={{ false: "white", true: "#56BBF1" }}
+          trackColor={{ false: color2, true: color1 }}
           thumbColor="white"
           onValueChange={toggleNotification}
           value={isEnabledN}
@@ -29,7 +29,7 @@ const SettingsScreen = () => {
       <View style={styles.rect}>
         <Text style={styles.text}>Tmavý režim</Text>
         <Switch
-          trackColor={{ false: "white", true: "#56BBF1" }}
+          trackColor={{ false: color2, true: color1 }}
           thumbColor="white"
           onValueChange={toggleDarkMode}
           value={isEnabledM}
