@@ -34,7 +34,7 @@ useEffect(() => {
 },[]);
 
   if(isSignedIn == true){
-    return(
+    return (
       <NavigationContainer>
         <Tab.Navigator
           initialRouteName="Home"
@@ -42,43 +42,72 @@ useEffect(() => {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 
-              if (route.name === 'Home') {
-                iconName = focused
-                  ? 'ios-home'
-                  : 'ios-home-outline';
-              } else if (route.name === 'Top') {
-                iconName = focused ? 'trophy' : 'trophy-outline';
-              } else if (route.name === 'Profile') {
-                iconName = focused ? 'person' : 'person-outline';
+              if (route.name === "Home") {
+                iconName = focused ? "ios-home" : "ios-home-outline";
+              } else if (route.name === "Top") {
+                iconName = focused ? "trophy" : "trophy-outline";
+              } else if (route.name === "Profile") {
+                iconName = focused ? "person" : "person-outline";
               } else {
-                iconName = focused ? 'settings' : 'settings-outline';
+                iconName = focused ? "settings" : "settings-outline";
               }
 
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: 'blue',
-            tabBarInactiveTintColor: 'gray',
-        })}
+            tabBarActiveTintColor: "blue",
+            tabBarInactiveTintColor: "gray",
+          })}
         >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Top" component={TopScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-        <Tab.Screen options={{ headerShown: false }} name="Uvod" component={Uvod} />
-      </Tab.Navigator>
-    </NavigationContainer>
-    )
+          <Tab.Screen
+            name="Home"
+            options={{ headerShown: false }}
+            component={HomeScreen}
+          />
+          <Tab.Screen
+            name="Top"
+            options={{ headerShown: false }}
+            component={TopScreen}
+          />
+          <Tab.Screen
+            name="Profile"
+            options={{ headerShown: false }}
+            component={ProfileScreen}
+          />
+          <Tab.Screen
+            name="Settings"
+            options={{ headerShown: false }}
+            component={SettingsScreen}
+            />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
   }else{
-    return(
+    return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Uvod" component={Uvod} options={{headerShown:false}}/>
-          <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
-          <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown:false}}/>
-          <Stack.Screen name="Reset" component={ResetScreen}/>
+          <Stack.Screen
+            name="Uvod"
+            options={{ headerShown: false }}
+            component={Uvod}
+          />
+          <Stack.Screen
+            name="Login"
+            options={{ headerShown: false }}
+            component={LoginScreen}
+          />
+          <Stack.Screen
+            name="Register"
+            options={{ headerShown: false }}
+            component={RegisterScreen}
+          />
+          <Stack.Screen
+            name="Reset"
+            options={{ headerShown: false }}
+            component={ResetScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
-    )
+    );
   }
 }
 
