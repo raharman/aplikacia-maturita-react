@@ -12,17 +12,6 @@ const SettingsScreen = () => {
   let color1 = "white";
   let color2 = "#F0EDEE";
 
-  
-  /* const SignOut = () => {
-    signOut(auth)
-    .then(() =>{
-      navigation.navigate("Top");
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  } */
-
   return (
     <View style={styles.container}>
       <View style={styles.rect}>

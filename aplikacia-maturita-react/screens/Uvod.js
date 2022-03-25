@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { Component } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
