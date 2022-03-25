@@ -41,13 +41,16 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '80%',
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 'auto',
   },
   rect: {
-    width: "75%",
+    width: "80%",
     height: "10%",
-    backgroundColor: "rgba(215,215,215,1)",
+    backgroundColor: "#E1E1E1",
     borderRadius: 19,
     marginVertical: "6%",
     flexDirection: "row",
@@ -55,8 +58,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontFamily: "inter-600",
     textAlign: "center",
-    fontSize: "150%",
+    color: '#3C3C44',
+    fontWeight: '700',
+    fontSize: 24,
   },
 });
