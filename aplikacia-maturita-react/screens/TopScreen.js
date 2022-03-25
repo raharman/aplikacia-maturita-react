@@ -2,9 +2,10 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 const TopScreen = () => {
+
   return (
     <View>
-      <Text>TopScreen</Text>
+      <Text></Text>
     </View>
   )
 }

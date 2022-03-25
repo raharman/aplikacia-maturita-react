@@ -12,11 +12,19 @@ const SettingsScreen = () => {
   let color1 = "white";
   let color2 = "#F0EDEE";
 
+  
+  /* const SignOut = () => {
+    signOut(auth)
+    .then(() =>{
+      navigation.navigate("Top");
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  } */
+
   return (
     <View style={styles.container}>
-      <View style={styles.head_rect}>
-        <Text style={styles.head_text}>Nastavenia</Text>
-      </View>
       <View style={styles.rect}>
         <Text style={styles.text}>Notifikácie</Text>
         <Switch
@@ -61,23 +69,5 @@ const styles = StyleSheet.create({
     fontFamily: "inter-600",
     textAlign: "center",
     fontSize: "150%",
-  },
-  head_rect: {
-    width: "100%",
-    height: "7%",
-    backgroundColor: "rgba(74,122,150,1)",
-
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    marginTop: "5%",
-
-    marginBottom: "6%",
-  },
-  head_text: {
-    fontFamily: "roboto-700",
-    textAlign: "center",
-    fontSize: "300%",
-    color: "white",
   },
 });
