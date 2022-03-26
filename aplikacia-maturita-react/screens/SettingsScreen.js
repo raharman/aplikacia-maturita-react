@@ -14,9 +14,6 @@ const SettingsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.head_rect}>
-        <Text style={styles.head_text}>Nastavenia</Text>
-      </View>
       <View style={styles.rect}>
         <Text style={styles.text}>Notifikácie</Text>
         <Switch
@@ -44,13 +41,16 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '80%',
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 'auto',
   },
   rect: {
-    width: "75%",
+    width: "80%",
     height: "10%",
-    backgroundColor: "rgba(215,215,215,1)",
+    backgroundColor: "#E1E1E1",
     borderRadius: 19,
     marginVertical: "6%",
     flexDirection: "row",
@@ -58,26 +58,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontFamily: "inter-600",
     textAlign: "center",
-    fontSize: "150%",
-  },
-  head_rect: {
-    width: "100%",
-    height: "7%",
-    backgroundColor: "rgba(74,122,150,1)",
-
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    marginTop: "5%",
-
-    marginBottom: "6%",
-  },
-  head_text: {
-    fontFamily: "roboto-700",
-    textAlign: "center",
-    fontSize: "300%",
-    color: "white",
+    color: '#3C3C44',
+    fontWeight: '700',
+    fontSize: 24,
   },
 });

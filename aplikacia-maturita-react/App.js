@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -12,6 +12,8 @@ import Uvod from './screens/Uvod';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ResetScreen from './screens/ResetScreen';
+import SelectionScreen from './screens/SelectionScreen';
+import SelectedScreen from './screens/SelectedScreen';
 import { auth } from './firebase';
 
 
@@ -33,6 +35,41 @@ useEffect(() => {
   })
 },[]);
 
+function HomeStackScreen() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Home" 
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen 
+        name="Selection" 
+        component={SelectionScreen}
+        options={{ 
+          tabBarShowLabel: false, 
+          title: 'Nastavenia',
+          headerStyle: {
+            backgroundColor: '#4A7A96',
+          },
+          headerTitleAlign: 'center',
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 32,
+          },
+        }} 
+      />
+
+      <Stack.Screen 
+        name="Selected" 
+        component={SelectedScreen} 
+      />
+    </Stack.Navigator>
+  );
+}
+
   if(isSignedIn == true){
     return (
       <NavigationContainer>
@@ -42,7 +79,7 @@ useEffect(() => {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 
-              if (route.name === "Home") {
+              if (route.name === "HomeScreen") {
                 iconName = focused ? "ios-home" : "ios-home-outline";
               } else if (route.name === "Top") {
                 iconName = focused ? "trophy" : "trophy-outline";
@@ -54,28 +91,64 @@ useEffect(() => {
 
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: "blue",
+            tabBarActiveTintColor: "#4a7a96",
             tabBarInactiveTintColor: "gray",
           })}
         >
           <Tab.Screen
-            name="Home"
-            options={{ headerShown: false }}
-            component={HomeScreen}
+            name="HomeScreen"
+            options={{ headerShown: false, tabBarShowLabel: false }}
+            component={HomeStackScreen}
           />
           <Tab.Screen
             name="Top"
-            options={{ headerShown: false }}
             component={TopScreen}
+            options={{ 
+              tabBarShowLabel: false, 
+              title: 'Rebríček',
+              headerStyle: {
+                backgroundColor: '#4A7A96',
+              },
+              headerTitleAlign: 'center',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 32,
+              },
+            }} 
           />
           <Tab.Screen
             name="Profile"
-            options={{ headerShown: false }}
+            options={{ 
+              tabBarShowLabel: false, 
+              title: 'Profil',
+              headerStyle: {
+                backgroundColor: '#4A7A96',
+              },
+              headerTitleAlign: 'center',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 32,
+              },
+             }}
             component={ProfileScreen}
           />
           <Tab.Screen
             name="Settings"
-            options={{ headerShown: false }}
+            options={{ 
+              tabBarShowLabel: false, 
+              title: 'Nastavenia',
+              headerStyle: {
+                backgroundColor: '#4A7A96',
+              },
+              headerTitleAlign: 'center',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 32,
+              },
+            }}
             component={SettingsScreen}
             />
         </Tab.Navigator>
