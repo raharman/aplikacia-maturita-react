@@ -1,77 +1,83 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { auth, db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from "@react-navigation/native";
 
-const HomeScreen = () => {
+const HomeScreen = props => {
 
   const navigation = useNavigation();
 
-  const [topics, setTopics] = useState([]);
-  const topicsCollectionRef = collection(db, "topics");
-
-  useEffect(() => {
-    
-    const getTopics = async () => {
-      const data = await getDocs(topicsCollectionRef);
-      setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    getTopics();
-  }, []);
-
   return (
 
-    <ScrollView>
-      <View style={styles.container}>
-        <Text>Email: {auth.currentUser?.email}</Text>
-        {/*
-        <TouchableOpacity
-          onPress={SignOut}
-          style={styles.button}
-        >      
-          <Text style={styles.buttonText}>Sign Out</Text>
-        </TouchableOpacity>
-  */}
-        <View style={styles.container}>
-            {topics.map((topic) => { 
-              return(            
-                <Text key={topic.id}>
-                <h1>Meno: {topic.name}</h1>
-                <p>Text: {topic.text}</p>
-                <p>Typ: {topic.type}</p>
-                <p>Id: {topic.id}</p>
-                </Text>
-            );
-          })}
-        </View>
-      </View>
-    </ScrollView>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Selection",{title: 'Gramatika',})}
+        style={styles.button}
+      >
+        <Ionicons name="pencil" size={24} color="white" style={styles.icon}/>
+        <Text
+          style={styles.buttonText}
+        >
+          Gramatika
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Selection",{title: 'Literatúra',})}
+        style={styles.button}
+      >
+        <Ionicons name="book" size={24} color="white" style={[styles.icon, {backgroundColor: '#EE8695'}]}/>
+        <Text
+          style={styles.buttonText}
+        >
+          Literatúra
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Selection",{title: 'Kvízy',})}
+        style={styles.button}
+      >
+        <Ionicons name="help" size={24} color="white" style={[styles.icon, {backgroundColor: '#FBBBAD'}]}/>
+        <Text
+          style={styles.buttonText}
+        >
+          Kvíz
+        </Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
 export default HomeScreen
 
 const styles = StyleSheet.create({
-  container: {
+  buttonContainer:{
     flex: 1,
+    width: '80%',
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 'auto',
   },
-
   button:{
-    backgroundColor: 'gray',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: '#E1E1E1',
     width: '100%',
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 40
+    marginTop: '20px',
   },
-
   buttonText:{
-    color: 'white',
+    color: '#3C3C44',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 24,
+  },
+  icon:{
+    width: '44px',
+    backgroundColor: '#333f58',
+    borderRadius: 10,
+    padding: '10px',
+    marginRight: '10px',
   },
 })

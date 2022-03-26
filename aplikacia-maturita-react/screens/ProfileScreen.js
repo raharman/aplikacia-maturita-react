@@ -8,14 +8,13 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const SignOut = () => {
-    signOut(auth)
-      .then(() => {
-        navigation.navigate("Uvod");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+    auth
+    .signOut()
+    .then(() =>{})
+    .catch((err)=>{
+      /* console.log(err) */
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -52,10 +51,6 @@ const ProfileScreen = () => {
       </View>
       <TouchableOpacity style={styles.rect3} onPress={SignOut}>
         <Text style={styles.text3}>Odhlásiť sa</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 export default ProfileScreen;
 
@@ -74,7 +69,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
     marginTop: "5%",
-
     marginBottom: "6%",
   },
   head_text: {
