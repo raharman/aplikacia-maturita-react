@@ -18,9 +18,9 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.head_rect}>
+      {/* <View style={styles.head_rect}>
         <Text style={styles.head_text}>Profil</Text>
-      </View>
+      </View> */}
       <View style={styles.rect}>
         <Image
           source={require("../assets/images/profilovka.jpg")}
@@ -51,7 +51,10 @@ const ProfileScreen = () => {
       </View>
       <TouchableOpacity style={styles.rect3} onPress={SignOut}>
         <Text style={styles.text3}>Odhlásiť sa</Text>
-
+      </TouchableOpacity>
+    </View>
+  )
+}
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
   },
   head_rect: {
     width: "100%",
-    height: "7%",
+    height: "10%",
     backgroundColor: "rgba(74,122,150,1)",
 
     alignItems: "center",
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     marginBottom: "6%",
   },
   head_text: {
-    fontFamily: "roboto-700",
+    //fontFamily: "roboto-700",
     textAlign: "center",
     fontSize: "300%",
     color: "white",
@@ -82,13 +85,13 @@ const styles = StyleSheet.create({
     height: "25%",
     backgroundColor: "rgba(215,215,215,1)",
     borderRadius: 19,
-    marginVertical: "6%",
+    marginVertical: "8%",
     justifyContent: "space-evenly",
     alignItems: "center",
     padding: "5%",
   },
   text: {
-    fontFamily: "inter-600",
+    //fontFamily: "inter-600",
     textAlign: "center",
     fontSize: "150%",
   },
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text2: {
-    fontFamily: "inter-600",
+    //fontFamily: "inter-600",
     fontSize: "120%",
   },
   image: {
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     marginTop: "6%",
   },
   text3: {
-    fontFamily: "inter-600",
+    //fontFamily: "inter-600",
     textAlign: "center",
     fontSize: "150%",
     color: "white",

@@ -12,4 +12,4 @@ const TopScreen = () => {
 
 export default TopScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

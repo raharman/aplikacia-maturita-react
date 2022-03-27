@@ -16,61 +16,54 @@ import SelectionScreen from './screens/SelectionScreen';
 import SelectedScreen from './screens/SelectedScreen';
 import { auth } from './firebase';
 
-
-
 export default function App() {
+  const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsSignedIn(true);
+      } else {
+        setIsSignedIn(false);
+      }
+    });
+  }, []);
 
-const [isSignedIn, setIsSignedIn] = useState(false);
+  function HomeStackScreen() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
 
-useEffect(() => {
-  auth.onAuthStateChanged(user=>{
-    if(user){
-      setIsSignedIn(true);
-    }else{
-      setIsSignedIn(false);
-    }
-  })
-},[]);
+        <Stack.Screen
+          name="Selection"
+          component={SelectionScreen}
+          options={{
+            tabBarShowLabel: false,
+            title: "Nastavenia",
+            headerStyle: {
+              backgroundColor: "#4A7A96",
+            },
+            headerTitleAlign: "center",
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 32,
+            },
+          }}
+        />
 
-function HomeStackScreen() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="Home" 
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
+        <Stack.Screen name="Selected" component={SelectedScreen} />
+      </Stack.Navigator>
+    );
+  }
 
-      <Stack.Screen 
-        name="Selection" 
-        component={SelectionScreen}
-        options={{ 
-          tabBarShowLabel: false, 
-          title: 'Nastavenia',
-          headerStyle: {
-            backgroundColor: '#4A7A96',
-          },
-          headerTitleAlign: 'center',
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-            fontSize: 32,
-          },
-        }} 
-      />
-
-      <Stack.Screen 
-        name="Selected" 
-        component={SelectedScreen} 
-      />
-    </Stack.Navigator>
-  );
-}
-
-  if(isSignedIn == true){
+  if (isSignedIn == true) {
     return (
       <NavigationContainer>
         <Tab.Navigator
@@ -103,58 +96,58 @@ function HomeStackScreen() {
           <Tab.Screen
             name="Top"
             component={TopScreen}
-            options={{ 
-              tabBarShowLabel: false, 
-              title: 'Rebríček',
+            options={{
+              tabBarShowLabel: false,
+              title: "Rebríček",
               headerStyle: {
-                backgroundColor: '#4A7A96',
+                backgroundColor: "#4A7A96",
               },
-              headerTitleAlign: 'center',
-              headerTintColor: '#fff',
+              headerTitleAlign: "center",
+              headerTintColor: "#fff",
               headerTitleStyle: {
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 fontSize: 32,
               },
-            }} 
+            }}
           />
           <Tab.Screen
             name="Profile"
-            options={{ 
-              tabBarShowLabel: false, 
-              title: 'Profil',
+            options={{
+              tabBarShowLabel: false,
+              title: "Profil",
               headerStyle: {
-                backgroundColor: '#4A7A96',
+                backgroundColor: "#4A7A96",
               },
-              headerTitleAlign: 'center',
-              headerTintColor: '#fff',
+              headerTitleAlign: "center",
+              headerTintColor: "#fff",
               headerTitleStyle: {
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 fontSize: 32,
               },
-             }}
+            }}
             component={ProfileScreen}
           />
           <Tab.Screen
             name="Settings"
-            options={{ 
-              tabBarShowLabel: false, 
-              title: 'Nastavenia',
+            options={{
+              tabBarShowLabel: false,
+              title: "Nastavenia",
               headerStyle: {
-                backgroundColor: '#4A7A96',
+                backgroundColor: "#4A7A96",
               },
-              headerTitleAlign: 'center',
-              headerTintColor: '#fff',
+              headerTitleAlign: "center",
+              headerTintColor: "#fff",
               headerTitleStyle: {
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 fontSize: 32,
               },
             }}
             component={SettingsScreen}
-            />
+          />
         </Tab.Navigator>
       </NavigationContainer>
     );
-  }else{
+  } else {
     return (
       <NavigationContainer>
         <Stack.Navigator>
