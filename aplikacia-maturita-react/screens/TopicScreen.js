@@ -1,132 +1,102 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, {useEffect} from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { db } from '../firebase';
-import { collection, getDoc, getDocs, doc, onSnapshot } from 'firebase/firestore';
-import { useWindowDimensions } from 'react-native';
-import RenderHtml from 'react-native-render-html';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { db } from "../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import RenderHtml from "react-native-render-html";
 
-
-const TopicScreen = ({props, route}) => {
-
+const TopicScreen = ({ route }) => {
   const { width } = useWindowDimensions();
 
   const navigation = useNavigation();
 
-  const {title, type, topicId} = route.params;
-  
+  const { title, type, topicId } = route.params;
+
   const docRef = doc(db, type, topicId);
 
+  const [topic, setTopic] = useState([]);
+
   onSnapshot(docRef, (doc) => {
-    console.log(doc.data(), doc.id)
-  }) 
+    setTopic(doc.data());
+  });
 
-  /* useEffect(() => {
-
+  useEffect(() => {
     navigation.setOptions({
       title: title,
-    }); 
-  }, []); */
-  
+      headerStyle: {
+        backgroundColor:
+          type == "Literatúra" ? "rgba(205, 57, 88, 0.48)" : "#333f58",
+      },
+    });
+  }, [title]);
+
+  tagsStyles.h4.backgroundColor =
+    type == "Literatúra" ? "rgba(205, 57, 88, 0.48)" : "#333f58";
   return (
-    <Text>
-      text
-    </Text>
-  /*
     <ScrollView style={styles.all} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Top",{
-                title: 'nazov',
-              });
-            }}
-            style={styles.test}
-          >
-            <Text>
-              Literatúra
-            </Text>
-          </TouchableOpacity>
-
-            {topics.map((topic) => {
-              return(            
-                <Text key={topic.id}>
-                {/*
-                <p>Typ: {topic.type}</p>
-                <p>Id: {topic.id}</p>
-                <p>Text:</p>  }
-                <RenderHtml
-                contentWidth={width}
-                source={{html: topic.text}}
-                tagsStyles={tagsStyles}
-                classesStyles={classesStyles}
-                />
-                </Text>
-            );
-          })}
-        </View>
+        <Text>
+          <RenderHtml
+            contentWidth={width}
+            source={{ html: topic.text ?? "<div></div>" }}
+            tagsStyles={tagsStyles}
+          />
+        </Text>
       </View>
     </ScrollView>
-    */
-  ) 
-}
+  );
+};
 
-export default TopicScreen
+export default TopicScreen;
 
 const styles = StyleSheet.create({
   all: {
     marginLeft: "20px",
     marginRight: "20px",
-  },  
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-
-  button:{
-    backgroundColor: 'gray',
-    width: '100%',
+  button: {
+    backgroundColor: "gray",
+    width: "100%",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 40
+    alignItems: "center",
+    marginTop: 40,
   },
 
-  buttonText:{
-    color: 'white',
-    fontWeight: '700',
+  buttonText: {
+    color: "white",
+    fontWeight: "700",
     fontSize: 16,
   },
+});
 
-  test:{
-    backgroundColor: 'red',
-  }
-})
-
-const tagsStyles = {
+var tagsStyles = {
   body: {
     textAlign: "justify",
   },
   h4: {
     display: "flex",
-    backgroundColor: 'rgba(205, 57, 88, 0.48)',
+    color: "white",
+    backgroundColor: "rgba(205, 57, 88, 0.48)",
     borderRadius: 50,
-    marginLeft: "0", 
-    marginRight: "auto", 
-    marginTop: "5px",
+    marginLeft: "0",
+    marginRight: "auto",
+    marginTop: "10px",
     marginBottom: "5px",
     padding: "4px 8px",
   },
-  p:{
+  p: {
     margin: "5px",
-  }
-};
-
-const classesStyles = {
-  title:{
-    backgroundColor: 'red',
-    margin: 0,
   },
-}
+};
