@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     padding: "5%",
   },
   text: {
-    fontFamily: "inter-600",
+    /* fontFamily: "inter-600", */
     textAlign: "center",
-    fontSize: "150%",
+    /* fontSize: "150%", */
   },
   rect2: {
     width: "auto",
@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text2: {
-    fontFamily: "inter-600",
-    fontSize: "120%",
+    /* fontFamily: "inter-600", */
+    /* fontSize: "120%", */
   },
   image: {
     width: "100%",
@@ -124,9 +124,9 @@ const styles = StyleSheet.create({
     marginTop: "6%",
   },
   text3: {
-    fontFamily: "inter-600",
+    /* fontFamily: "inter-600", */
     textAlign: "center",
-    fontSize: "150%",
+    /* fontSize: "150%", */
     color: "white",
   },
   margin: {

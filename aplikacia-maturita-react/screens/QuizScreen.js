@@ -5,7 +5,6 @@ import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Pressable, TouchableOpacity } from "react-native-web";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Quiz from "react-quiz-component";
 
 let quiz = [];
 let index = 0;

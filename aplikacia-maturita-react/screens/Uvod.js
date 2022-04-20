@@ -8,9 +8,18 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import { name as appName } from "../app.json";
+import { AppRegistry, Platform } from "react-native";
+import { registerRootComponent } from "expo";
 
 const Uvod = () => {
   const navigation = useNavigation();
+
+  if (Platform.OS == "android") {
+    registerRootComponent(App);
+  } else {
+    AppRegistry.registerComponent(appName, () => App);
+  }
 
   return (
     <View style={styles.container}>
@@ -50,11 +59,11 @@ const styles = StyleSheet.create({
     height: "50%",
   },
   maturitaVoVrecku: {
-    fontFamily: "roboto-700",
+    /* fontFamily: "roboto-700", */
     color: "rgba(51,51,51,1)",
     textAlign: "center",
     alignItems: "center",
-    fontSize: "300%",
+    /* fontSize: "300%", */
   },
   button: {
     backgroundColor: "rgba(74,122,150,1)",
@@ -67,9 +76,9 @@ const styles = StyleSheet.create({
     marginTop: "10%",
   },
   pismo: {
-    fontFamily: "inter-600",
+    /* fontFamily: "inter-600", */
     color: "rgba(255,255,255,1)",
-    fontSize: "150%",
+    /* fontSize: "150%", */
   },
 });
 
