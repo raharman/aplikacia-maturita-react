@@ -8,12 +8,9 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { registerRootComponent } from "expo";
-import App from "../App";
 
 const Uvod = () => {
   const navigation = useNavigation();
-  registerRootComponent(App);
 
   return (
     <View style={styles.container}>

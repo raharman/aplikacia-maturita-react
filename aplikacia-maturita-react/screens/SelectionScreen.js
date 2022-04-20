@@ -13,12 +13,14 @@ const SelectionScreen = ({ route, navigation }) => {
   const { title } = route.params;
 
   const [topics, setTopics] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
 
   const topicsCollectionRef = collection(db, title);
 
   const getTopics = async () => {
     const data = await getDocs(topicsCollectionRef);
     setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    setQuizzes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   useEffect(() => {
@@ -30,40 +32,74 @@ const SelectionScreen = ({ route, navigation }) => {
         backgroundColor:
           title == "Literatúra"
             ? "rgba(205, 57, 88, 0.48)"
-            : "rgba(51, 63, 88, 1)",
+            : title == "Gramatika"
+            ? "#333f58"
+            : "#FBBBAD",
       },
     });
   }, []);
 
-  return (
-    <ScrollView>
-      <View style={styles.buttonContainer}>
-        {topics
-          .sort(function (a, b) {
-            if (a.name > b.name) return 1;
-            if (a.name < b.name) return -1;
-            return 0;
-          })
-          .map((topic) => {
-            return (
-              <TouchableOpacity
-                key={topic.id}
-                onPress={() =>
-                  navigation.navigate("Selected", {
-                    title: topic.name,
-                    topicId: topic.id,
-                    type: topic.type,
-                  })
-                }
-                style={styles.button}
-              >
-                <Text style={styles.buttonHeader}>{topic.name}</Text>
-              </TouchableOpacity>
-            );
-          })}
-      </View>
-    </ScrollView>
-  );
+  if (title == "Kvízy") {
+    return (
+      <ScrollView>
+        <View style={styles.buttonContainer}>
+          {quizzes
+            .sort(function (a, b) {
+              if (a.name > b.name) return 1;
+              if (a.name < b.name) return -1;
+              return 0;
+            })
+            .map((quiz) => {
+              return (
+                <TouchableOpacity
+                  key={quiz.id}
+                  onPress={() =>
+                    navigation.navigate("Quiz", {
+                      title: quiz.name,
+                      quizId: quiz.id,
+                      type: quiz.type,
+                    })
+                  }
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonHeader}>{quiz.name}</Text>
+                </TouchableOpacity>
+              );
+            })}
+        </View>
+      </ScrollView>
+    );
+  } else {
+    return (
+      <ScrollView>
+        <View style={styles.buttonContainer}>
+          {topics
+            .sort(function (a, b) {
+              if (a.name > b.name) return 1;
+              if (a.name < b.name) return -1;
+              return 0;
+            })
+            .map((topic) => {
+              return (
+                <TouchableOpacity
+                  key={topic.id}
+                  onPress={() =>
+                    navigation.navigate("Selected", {
+                      title: topic.name,
+                      topicId: topic.id,
+                      type: topic.type,
+                    })
+                  }
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonHeader}>{topic.name}</Text>
+                </TouchableOpacity>
+              );
+            })}
+        </View>
+      </ScrollView>
+    );
+  }
 };
 
 export default SelectionScreen;
