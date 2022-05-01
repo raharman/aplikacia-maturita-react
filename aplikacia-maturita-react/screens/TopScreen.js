@@ -1,15 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
 
 const TopScreen = () => {
-
   return (
     <View>
-      <Text></Text>
+      <Text>TopScreen</Text>
     </View>
-  )
-}
+  );
+};
 
-export default TopScreen
+export default TopScreen;
 
 const styles = StyleSheet.create({});

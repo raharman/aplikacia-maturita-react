@@ -9,12 +9,12 @@ const ProfileScreen = () => {
 
   const SignOut = () => {
     auth
-    .signOut()
-    .then(() =>{})
-    .catch((err)=>{
-      /* console.log(err) */
-    })
-  }
+      .signOut()
+      .then(() => {})
+      .catch((error) => {
+        /* console.log(error) */
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -53,8 +53,9 @@ const ProfileScreen = () => {
         <Text style={styles.text3}>Odhlásiť sa</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
+
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  head_rect: {
+  /*   head_rect: {
     width: "100%",
     height: "10%",
     backgroundColor: "rgba(74,122,150,1)",
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: "300%",
     color: "white",
-  },
+  }, */
   rect: {
     width: "75%",
     height: "25%",
@@ -91,9 +92,9 @@ const styles = StyleSheet.create({
     padding: "5%",
   },
   text: {
-    //fontFamily: "inter-600",
+    /* fontFamily: "inter-600", */
     textAlign: "center",
-    fontSize: "150%",
+    /* fontSize: "150%", */
   },
   rect2: {
     width: "auto",
@@ -105,8 +106,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text2: {
-    //fontFamily: "inter-600",
-    fontSize: "120%",
+    /* fontFamily: "inter-600", */
+    /* fontSize: "120%", */
   },
   image: {
     width: "100%",
@@ -123,9 +124,9 @@ const styles = StyleSheet.create({
     marginTop: "6%",
   },
   text3: {
-    //fontFamily: "inter-600",
+    /* fontFamily: "inter-600", */
     textAlign: "center",
-    fontSize: "150%",
+    /* fontSize: "150%", */
     color: "white",
   },
   margin: {

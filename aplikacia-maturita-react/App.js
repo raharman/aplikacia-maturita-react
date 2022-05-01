@@ -1,26 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './screens/HomeScreen';
-import TopScreen from './screens/TopScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Uvod from './screens/Uvod';
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
-import ResetScreen from './screens/ResetScreen';
-import SelectionScreen from './screens/SelectionScreen';
-import SelectedScreen from './screens/SelectedScreen';
-import { auth } from './firebase';
+import React, { useState, useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeScreen from "./screens/HomeScreen";
+import TopScreen from "./screens/TopScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import SettingsScreen from "./screens/SettingsScreen";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import Uvod from "./screens/Uvod";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import ResetScreen from "./screens/ResetScreen";
+import SelectionScreen from "./screens/SelectionScreen";
+import TopicScreen from "./screens/TopicScreen";
+import { auth } from "./firebase";
+import QuizScreen from "./screens/QuizScreen";
+import TestScreen from "./screens/TestScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
 
   const [isSignedIn, setIsSignedIn] = useState(false);
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -45,7 +48,7 @@ export default function App() {
           component={SelectionScreen}
           options={{
             tabBarShowLabel: false,
-            title: "Nastavenia",
+            title: "",
             headerStyle: {
               backgroundColor: "#4A7A96",
             },
@@ -58,7 +61,41 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen name="Selected" component={SelectedScreen} />
+        <Stack.Screen
+          name="Selected"
+          component={TopicScreen}
+          options={{
+            tabBarShowLabel: false,
+            title: "",
+            headerStyle: {
+              backgroundColor: "#4A7A96",
+            },
+            headerTitleAlign: "center",
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 32,
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="Quiz"
+          component={QuizScreen}
+          options={{
+            tabBarShowLabel: false,
+            title: "",
+            headerStyle: {
+              backgroundColor: "#4A7A96",
+            },
+            headerTitleAlign: "center",
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 32,
+            },
+          }}
+        />
       </Stack.Navigator>
     );
   }
@@ -144,6 +181,23 @@ export default function App() {
             }}
             component={SettingsScreen}
           />
+          <Tab.Screen
+            name="Test"
+            options={{
+              tabBarShowLabel: false,
+              title: "Test",
+              headerStyle: {
+                backgroundColor: "#4A7A96",
+              },
+              headerTitleAlign: "center",
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+                fontSize: 32,
+              },
+            }}
+            component={TestScreen}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     );
@@ -168,7 +222,14 @@ export default function App() {
           />
           <Stack.Screen
             name="Reset"
-            options={{ headerShown: false }}
+            options={{
+              title: "Zabudol som heslo",
+              headerTransparent: true,
+              statusBarHidden: true,
+              headerStyle: {
+                borderBottomWidth: 0,
+              },
+            }}
             component={ResetScreen}
           />
         </Stack.Navigator>
@@ -180,8 +241,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
