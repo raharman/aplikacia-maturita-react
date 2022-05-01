@@ -33,6 +33,7 @@ const TopicScreen = ({ route }) => {
         backgroundColor:
           type == "Literatúra" ? "rgba(205, 57, 88, 0.48)" : "#333f58",
       },
+      headerBackTitleVisible: false,
     });
   }, [title]);
 
@@ -57,8 +58,8 @@ export default TopicScreen;
 
 const styles = StyleSheet.create({
   all: {
-    marginLeft: "20px",
-    marginRight: "20px",
+    marginLeft: 20,
+    marginRight: 20,
   },
   container: {
     flex: 1,
@@ -78,11 +79,11 @@ var tagsStyles = {
     borderRadius: 50,
     marginLeft: "0",
     marginRight: "auto",
-    marginTop: "10px",
-    marginBottom: "5px",
+    marginTop: 10,
+    marginBottom: 5,
     padding: "4px 8px",
   },
   p: {
-    margin: "5px",
+    margin: 5,
   },
 };

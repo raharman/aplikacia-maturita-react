@@ -15,12 +15,15 @@ const SelectionScreen = ({ route, navigation }) => {
   const [topics, setTopics] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
 
+  /* const [filteredData, setFilteredData] = useState([]); */
+
   const topicsCollectionRef = collection(db, title);
 
   const getTopics = async () => {
     const data = await getDocs(topicsCollectionRef);
     setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     setQuizzes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    /* setFilteredData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))); */
   };
 
   useEffect(() => {
@@ -31,13 +34,18 @@ const SelectionScreen = ({ route, navigation }) => {
       headerStyle: {
         backgroundColor:
           title == "Literatúra"
-            ? "rgba(205, 57, 88, 0.48)"
+            ? "#EE8695"
             : title == "Gramatika"
             ? "#333f58"
             : "#FBBBAD",
       },
+      headerBackTitleVisible: false,
+      /* headerSearchBarOptions: {
+        placeholder: "Vyhľadať",
+        barTintColor: "#FFFFFF",
+      }, */
     });
-  }, []);
+  }, [navigation]);
 
   if (title == "Kvízy") {
     return (
@@ -108,7 +116,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "80%",
     justifyContent: "center",
-    margin: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   button: {
     flex: 1,
@@ -119,7 +128,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 25,
     borderRadius: 10,
-    marginVertical: "10px",
+    marginVertical: 10,
     flexWrap: "wrap",
     alignContent: "center",
   },
@@ -130,10 +139,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   icon: {
-    width: "44px",
-    height: "44px",
+    width: 44,
+    height: 44,
     backgroundColor: "#4A7A96",
     borderRadius: 10,
-    padding: "10px",
+    padding: 10,
   },
 });

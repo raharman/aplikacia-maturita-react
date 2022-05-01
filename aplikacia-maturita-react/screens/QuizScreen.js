@@ -1,13 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { Pressable, TouchableOpacity } from "react-native-web";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 let quiz = [];
-let index = 0;
+let index = -1;
+let score = 0;
 const QuizScreen = ({ route }) => {
   const navigation = useNavigation();
 
@@ -15,22 +20,23 @@ const QuizScreen = ({ route }) => {
 
   const collectionRef = collection(db, "Kvízy", quizId, "questions");
 
-  /* const [quiz, setQuiz] = useState([]); */
-  //let quiz = [];
   const [question, setQuestion] = useState();
   const [isLoading, setLoading] = useState(true);
   const [isAnswered, setAnswered] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const getQuiz = async () => {
     const data = await getDocs(collectionRef);
 
     quiz = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    setQuestion(quiz[index]);
+
+    handleNextQuestion();
     setLoading(false);
   };
 
   useEffect(() => {
-    index = 0;
+    index = -1;
+    score = 0;
     getQuiz();
     navigation.setOptions({
       title: title,
@@ -38,85 +44,258 @@ const QuizScreen = ({ route }) => {
         backgroundColor: "#FBBBAD",
       },
     });
-  }, [title]);
+  }, [navigation]);
 
   function handleSubmit(answer) {
     setAnswered(true);
+    if (answer) {
+      score++;
+    }
+    console.log(answer);
+    console.log(score);
   }
 
   function handleNextQuestion() {
-    index += 1;
+    index++;
     if (index < quiz.length) {
+      if (["matrix", "choice", "multipleChoice"].includes(quiz[index].type))
+        quiz[index].answers = shuffleOptions(quiz[index].answers);
       setQuestion(quiz[index]);
       setAnswered(false);
     }
+  }
+
+  function shuffleOptions(array) {
+    let currentIndex = array.length,
+      randomIndex;
+
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
   }
 
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
 
-  return (
-    <SafeAreaView>
-      <View style={styles.buttonContainer}>
-        <View key={question.id}>
-          <View style={styles.button}>
-            <Text style={styles.buttonHeader}>{question.question}</Text>
+  if (question?.type == "trueFalse") {
+    return (
+      <View>
+        <View style={styles.buttonContainer}>
+          <View key={question?.id}>
+            <View style={styles.button}>
+              <Text style={styles.buttonHeader}>{question?.question}</Text>
+            </View>
+            {question?.answers.map((option, key) => {
+              return (
+                <TouchableOpacity
+                  style={
+                    isAnswered
+                      ? option?.answer === true
+                        ? styles.correct
+                        : styles.wrong
+                      : styles.answer
+                  }
+                  key={key}
+                  disabled={isAnswered}
+                  onPress={(e) => {
+                    handleSubmit(option?.answer);
+                    /* if (e?.currentTarget?.style?.border) */
+                    e.currentTarget.style.border = "solid 5px yellow";
+                  }}
+                >
+                  <Text style={styles.buttonHeader}>{option?.text}</Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
-          {question.answers.map((option, key) => {
-            return (
-              <TouchableOpacity
-                style={
-                  isAnswered
-                    ? option.answer === true
-                      ? styles.correct
-                      : styles.wrong
-                    : styles.answer
-                }
-                key={key}
-                disabled={isAnswered}
-                onPress={(e) => {
-                  handleSubmit(option.answer);
-                  e.currentTarget.style.border = "solid 5px yellow";
-                }}
-              >
-                <Text style={styles.buttonHeader}>{option.text}</Text>
-              </TouchableOpacity>
-            );
-          })}
         </View>
+        {isAnswered ? (
+          index !== quiz.length - 1 ? (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => handleNextQuestion()}
+            >
+              <Text style={styles.nextButtonText}>Ďalšia otázka</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.nextButtonText}>Koniec Quizu</Text>
+            </Pressable>
+          )
+        ) : null}
       </View>
-
-      {/* ProgressBar */}
-
-      {/* Next Button */}
-      {isAnswered ? (
-        index !== quiz.length - 1 ? (
-          <Pressable
-            style={styles.nextButton}
-            onPress={() => handleNextQuestion()}
-          >
-            <Text style={styles.nextButtonText}>Ďalšia otázka</Text>
-          </Pressable>
-        ) : (
-          <Pressable
-            style={styles.nextButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.nextButtonText}>Koniec Quizu</Text>
-          </Pressable>
-        )
-      ) : null}
-    </SafeAreaView>
-  );
+    );
+  } else if (question?.type == "choice") {
+    return (
+      <View>
+        <View style={styles.buttonContainer}>
+          <View key={question?.id}>
+            <View style={styles.button}>
+              <Text style={styles.buttonHeader}>{question?.question}</Text>
+            </View>
+            {question?.answers.map((option, key) => {
+              return (
+                <TouchableOpacity
+                  style={
+                    isAnswered
+                      ? option?.answer === true
+                        ? styles.correct
+                        : styles.wrong
+                      : styles.answer
+                  }
+                  key={key}
+                  disabled={isAnswered}
+                  onPress={(e) => {
+                    handleSubmit(option?.answer);
+                    e.currentTarget.style.border = "solid 5px yellow";
+                  }}
+                >
+                  <Text style={styles.buttonHeader}>{option?.text}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+        {isAnswered ? (
+          index !== quiz.length - 1 ? (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => handleNextQuestion()}
+            >
+              <Text style={styles.nextButtonText}>Ďalšia otázka</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.nextButtonText}>Koniec Quizu</Text>
+            </Pressable>
+          )
+        ) : null}
+      </View>
+    );
+  } else if (question?.type == "multipleChoice") {
+    return (
+      <View>
+        <View style={styles.buttonContainer}>
+          <View key={question?.id}>
+            <View style={styles.button}>
+              <Text style={styles.buttonHeader}>{question?.question}</Text>
+            </View>
+            {question?.answers.map((option, key) => {
+              return (
+                <TouchableOpacity
+                  style={
+                    isAnswered
+                      ? option?.answer === true
+                        ? styles.correct
+                        : styles.wrong
+                      : styles.answer
+                  }
+                  key={key}
+                  disabled={isAnswered}
+                  onPress={(e) => {
+                    handleSubmit(option?.answer);
+                    e.currentTarget.style.border = "solid 5px yellow";
+                  }}
+                >
+                  <Text style={styles.buttonHeader}>{option?.text}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+        {isAnswered ? (
+          index !== quiz.length - 1 ? (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => handleNextQuestion()}
+            >
+              <Text style={styles.nextButtonText}>Ďalšia otázka</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.nextButtonText}>Koniec Quizu</Text>
+            </Pressable>
+          )
+        ) : null}
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        <View style={styles.buttonContainer}>
+          <View key={question?.id}>
+            <View style={styles.button}>
+              <Text style={styles.buttonHeader}>{question?.question}</Text>
+            </View>
+            {question?.answers.map((option, key) => {
+              return (
+                <TouchableOpacity
+                  style={
+                    isAnswered
+                      ? option?.answer === true
+                        ? styles.correct
+                        : styles.wrong
+                      : styles.answer
+                  }
+                  key={key}
+                  disabled={isAnswered}
+                  onPress={(e) => {
+                    handleSubmit(option?.answer);
+                    e.currentTarget.style.border = "solid 5px yellow";
+                  }}
+                >
+                  <Text style={styles.buttonHeader}>{option?.text}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+        {isAnswered ? (
+          index !== quiz.length - 1 ? (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => handleNextQuestion()}
+            >
+              <Text style={styles.nextButtonText}>Ďalšia otázka</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              style={styles.nextButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.nextButtonText}>Koniec Quizu</Text>
+            </Pressable>
+          )
+        ) : null}
+      </View>
+    );
+  }
 };
 
 export default QuizScreen;
 
 const styles = StyleSheet.create({
   all: {
-    marginLeft: "20px",
-    marginRight: "20px",
+    marginLeft: 20,
+    marginRight: 20,
   },
   container: {
     flex: 1,
@@ -143,14 +322,14 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   correct: {
-    backgroundColor: "green",
+    backgroundColor: "rgb(116, 203, 116)",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 20,
   },
   wrong: {
-    backgroundColor: "red",
+    backgroundColor: "rgb(228, 82, 82)",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -171,9 +350,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 32,
+    margin: "auto",
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: "#E1E1E1",
+    backgroundColor: "rgb(251, 187, 173)",
   },
   nextButtonText: {
     fontSize: 16,

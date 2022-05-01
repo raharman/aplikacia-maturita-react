@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
-    margin: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   button: {
     flexDirection: "row",
@@ -63,8 +64,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#E1E1E1",
     width: "100%",
     padding: 15,
+    marginTop: 20,
     borderRadius: 10,
-    marginTop: "20px",
   },
   buttonText: {
     color: "#3C3C44",
@@ -72,10 +73,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   icon: {
-    width: "44px",
+    width: 44,
     backgroundColor: "#333f58",
+    padding: 10,
+    marginRight: 10,
     borderRadius: 10,
-    padding: "10px",
-    marginRight: "10px",
+    overflow: "hidden",
   },
 });

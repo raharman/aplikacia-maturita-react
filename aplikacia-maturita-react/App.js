@@ -16,6 +16,7 @@ import SelectionScreen from "./screens/SelectionScreen";
 import TopicScreen from "./screens/TopicScreen";
 import { auth } from "./firebase";
 import QuizScreen from "./screens/QuizScreen";
+import TestScreen from "./screens/TestScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -180,6 +181,23 @@ export default function App() {
             }}
             component={SettingsScreen}
           />
+          <Tab.Screen
+            name="Test"
+            options={{
+              tabBarShowLabel: false,
+              title: "Test",
+              headerStyle: {
+                backgroundColor: "#4A7A96",
+              },
+              headerTitleAlign: "center",
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+                fontSize: 32,
+              },
+            }}
+            component={TestScreen}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     );
@@ -204,7 +222,14 @@ export default function App() {
           />
           <Stack.Screen
             name="Reset"
-            options={{ headerShown: false }}
+            options={{
+              title: "Zabudol som heslo",
+              headerTransparent: true,
+              statusBarHidden: true,
+              headerStyle: {
+                borderBottomWidth: 0,
+              },
+            }}
             component={ResetScreen}
           />
         </Stack.Navigator>

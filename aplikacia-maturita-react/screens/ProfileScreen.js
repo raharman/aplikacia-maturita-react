@@ -11,8 +11,8 @@ const ProfileScreen = () => {
     auth
       .signOut()
       .then(() => {})
-      .catch((err) => {
-        /* console.log(err) */
+      .catch((error) => {
+        /* console.log(error) */
       });
   };
 

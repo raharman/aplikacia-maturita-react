@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { name as appName } from "../app.json";
+import app from "../app.json";
 import { AppRegistry, Platform } from "react-native";
 import { registerRootComponent } from "expo";
 
@@ -18,7 +18,7 @@ const Uvod = () => {
   if (Platform.OS == "android") {
     registerRootComponent(App);
   } else {
-    AppRegistry.registerComponent(appName, () => App);
+    AppRegistry.registerComponent(app?.expo?.name, () => App);
   }
 
   return (
@@ -29,7 +29,7 @@ const Uvod = () => {
         resizeMode="contain"
         style={styles.image}
       ></Image>
-      <Text style={styles.maturitaVoVrecku}>Maturita {"\n"}vo vrecku</Text>
+      <Text style={styles.welcomeHeader}>Maturita {"\n"}vo vrecku</Text>
       <TouchableOpacity
         onPress={() => navigation.navigate("Login")}
         style={styles.button}
@@ -58,12 +58,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "50%",
   },
-  maturitaVoVrecku: {
+  welcomeHeader: {
     /* fontFamily: "roboto-700", */
     color: "rgba(51,51,51,1)",
     textAlign: "center",
     alignItems: "center",
-    /* fontSize: "300%", */
+    fontSize: 48,
+    fontWeight: "bold",
   },
   button: {
     backgroundColor: "rgba(74,122,150,1)",
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   pismo: {
     /* fontFamily: "inter-600", */
     color: "rgba(255,255,255,1)",
-    /* fontSize: "150%", */
+    fontSize: 16,
   },
 });
 
