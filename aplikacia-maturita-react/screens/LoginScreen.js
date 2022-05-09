@@ -81,25 +81,29 @@ const LoginScreen = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={SignIn} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Prihlásiť sa</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate("Register")}
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button, { backgroundColor: "rgba(182,180,180,1)" }]}
         >
-          <Text style={styles.buttonOutlineText}>Register</Text>
+          <Text style={[styles.buttonOutlineText, styles.buttonText]}>
+            Zaregistrovať sa
+          </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate("Reset")}
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button, { backgroundColor: "rgba(182,180,180,1)" }]}
         >
-          <Text style={styles.buttonOutlineText}>Reset</Text>
+          <Text style={[styles.buttonOutlineText, styles.buttonText]}>
+            Zabudli ste heslo?
+          </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -114,61 +118,50 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   inputContainer: {
     width: "80%",
+    marginHorizontal: 20,
   },
-
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5,
+    marginTop: 20,
   },
-
   buttonContainer: {
-    width: "60%",
+    width: "80%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 15,
   },
-
   button: {
-    backgroundColor: "gray",
-    width: "100%",
+    backgroundColor: "rgba(74,122,150,1)",
+    borderRadius: 24,
+    width: "60%",
     padding: 15,
-    borderRadius: 10,
     alignItems: "center",
   },
-
   buttonText: {
     color: "white",
     fontWeight: "700",
     fontSize: 16,
   },
-
-  buttonOutline: {
-    backgroundColor: "white",
-    marginTop: 5,
-    borderColor: "gray",
-    borderWidth: 2,
-  },
-
   buttonOutlineText: {
     color: "gray",
     fontWeight: "700",
     fontSize: 16,
   },
   image: {
-    width: 250,
-    height: 250,
+    width: 414,
+    height: 414,
   },
   welcomeHeader: {
     /* fontFamily: "roboto-700", */
     color: "rgba(51,51,51,1)",
     textAlign: "center",
     alignItems: "center",
-    fontSize: 32,
+    fontSize: 48,
+    fontWeight: "bold",
   },
 });

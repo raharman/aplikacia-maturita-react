@@ -34,7 +34,7 @@ const SelectionScreen = ({ route, navigation }) => {
       headerStyle: {
         backgroundColor:
           title == "Literatúra"
-            ? "#EE8695"
+            ? "rgba(205, 57, 88, 0.48)"
             : title == "Gramatika"
             ? "#333f58"
             : "#FBBBAD",

@@ -4,11 +4,13 @@ import {
   View,
   TouchableOpacity,
   Pressable,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import QuizButton from "../components/QuizButton";
 
 let quiz = [];
 let index = -1;
@@ -23,7 +25,7 @@ const QuizScreen = ({ route }) => {
   const [question, setQuestion] = useState();
   const [isLoading, setLoading] = useState(true);
   const [isAnswered, setAnswered] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isSelected, setIsSelected] = useState();
 
   const getQuiz = async () => {
     const data = await getDocs(collectionRef);
@@ -46,13 +48,16 @@ const QuizScreen = ({ route }) => {
     });
   }, [navigation]);
 
-  function handleSubmit(answer) {
-    setAnswered(true);
-    if (answer) {
-      score++;
+  function handleSubmit(answer = false) {
+    if (question.type === "trueFalse" || question.type === "choice") {
+      setAnswered(true);
+      if (answer) {
+        score++;
+      }
+      console.log(score);
+    } else {
+      console.log(answer);
     }
-    console.log(answer);
-    console.log(score);
   }
 
   function handleNextQuestion() {
@@ -96,24 +101,14 @@ const QuizScreen = ({ route }) => {
             </View>
             {question?.answers.map((option, key) => {
               return (
-                <TouchableOpacity
-                  style={
-                    isAnswered
-                      ? option?.answer === true
-                        ? styles.correct
-                        : styles.wrong
-                      : styles.answer
-                  }
+                <QuizButton
+                  isAnswered={isAnswered}
                   key={key}
                   disabled={isAnswered}
-                  onPress={(e) => {
-                    handleSubmit(option?.answer);
-                    /* if (e?.currentTarget?.style?.border) */
-                    e.currentTarget.style.border = "solid 5px yellow";
-                  }}
-                >
-                  <Text style={styles.buttonHeader}>{option?.text}</Text>
-                </TouchableOpacity>
+                  buttonAnswer={option.answer}
+                  buttonText={option.text}
+                  changeIsAnswered={handleSubmit.bind(this)}
+                ></QuizButton>
               );
             })}
           </View>
@@ -147,23 +142,14 @@ const QuizScreen = ({ route }) => {
             </View>
             {question?.answers.map((option, key) => {
               return (
-                <TouchableOpacity
-                  style={
-                    isAnswered
-                      ? option?.answer === true
-                        ? styles.correct
-                        : styles.wrong
-                      : styles.answer
-                  }
+                <QuizButton
+                  isAnswered={isAnswered}
                   key={key}
                   disabled={isAnswered}
-                  onPress={(e) => {
-                    handleSubmit(option?.answer);
-                    e.currentTarget.style.border = "solid 5px yellow";
-                  }}
-                >
-                  <Text style={styles.buttonHeader}>{option?.text}</Text>
-                </TouchableOpacity>
+                  buttonAnswer={option.answer}
+                  buttonText={option.text}
+                  changeIsAnswered={handleSubmit.bind(this)}
+                ></QuizButton>
               );
             })}
           </View>
@@ -189,7 +175,7 @@ const QuizScreen = ({ route }) => {
     );
   } else if (question?.type == "multipleChoice") {
     return (
-      <View>
+      <ScrollView>
         <View style={styles.buttonContainer}>
           <View key={question?.id}>
             <View style={styles.button}>
@@ -197,23 +183,14 @@ const QuizScreen = ({ route }) => {
             </View>
             {question?.answers.map((option, key) => {
               return (
-                <TouchableOpacity
-                  style={
-                    isAnswered
-                      ? option?.answer === true
-                        ? styles.correct
-                        : styles.wrong
-                      : styles.answer
-                  }
+                <QuizButton
+                  isAnswered={isAnswered}
                   key={key}
                   disabled={isAnswered}
-                  onPress={(e) => {
-                    handleSubmit(option?.answer);
-                    e.currentTarget.style.border = "solid 5px yellow";
-                  }}
-                >
-                  <Text style={styles.buttonHeader}>{option?.text}</Text>
-                </TouchableOpacity>
+                  buttonAnswer={option.answer}
+                  buttonText={option.text}
+                  changeIsAnswered={handleSubmit.bind(this)}
+                ></QuizButton>
               );
             })}
           </View>
@@ -235,7 +212,7 @@ const QuizScreen = ({ route }) => {
             </Pressable>
           )
         ) : null}
-      </View>
+      </ScrollView>
     );
   } else {
     return (
@@ -247,23 +224,14 @@ const QuizScreen = ({ route }) => {
             </View>
             {question?.answers.map((option, key) => {
               return (
-                <TouchableOpacity
-                  style={
-                    isAnswered
-                      ? option?.answer === true
-                        ? styles.correct
-                        : styles.wrong
-                      : styles.answer
-                  }
+                <QuizButton
+                  isAnswered={isAnswered}
                   key={key}
                   disabled={isAnswered}
-                  onPress={(e) => {
-                    handleSubmit(option?.answer);
-                    e.currentTarget.style.border = "solid 5px yellow";
-                  }}
-                >
-                  <Text style={styles.buttonHeader}>{option?.text}</Text>
-                </TouchableOpacity>
+                  buttonAnswer={option.answer}
+                  buttonText={option.text}
+                  changeIsAnswered={handleSubmit.bind(this)}
+                ></QuizButton>
               );
             })}
           </View>
@@ -293,10 +261,6 @@ const QuizScreen = ({ route }) => {
 export default QuizScreen;
 
 const styles = StyleSheet.create({
-  all: {
-    marginLeft: 20,
-    marginRight: 20,
-  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -320,6 +284,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 20,
+    /*     marginRight: "auto",
+    marginLeft: "auto", */
   },
   correct: {
     backgroundColor: "rgb(116, 203, 116)",
@@ -334,10 +300,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 20,
-  },
-  buttonText: {
-    fontWeight: "700",
-    fontSize: 16,
   },
   buttonHeader: {
     color: "#3C3C44",
@@ -361,5 +323,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
+  },
+  selectedButton: {
+    borderColor: "yellow",
+    borderWidth: 2,
   },
 });
