@@ -68,7 +68,7 @@ const RegisterScreen = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Register")}
+          onPress={() => SignUp()}
           style={[styles.button, { backgroundColor: "rgba(182,180,180,1)" }]}
         >
           <Text style={[styles.buttonOutlineText, styles.buttonText]}>
