@@ -34,15 +34,13 @@ const Uvod = () => {
         onPress={() => navigation.navigate("Login")}
         style={styles.button}
       >
-        <Text style={styles.pismo}>Prihlásiť sa</Text>
+        <Text style={styles.buttonText}>Prihlásiť sa</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate("Register")}
-        style={[styles.button, { backgroundColor: "rgba(215,215,215,1)" }]}
+        style={[styles.button, { backgroundColor: "rgba(182,180,180,1)" }]}
       >
-        <Text style={[styles.pismo, { color: "rgba(51,51,51,1)" }]}>
-          Registrácia
-        </Text>
+        <Text style={[styles.buttonText, { color: "white" }]}>Registrácia</Text>
       </TouchableOpacity>
     </View>
   );
@@ -76,9 +74,9 @@ const styles = StyleSheet.create({
     marginLeft: "25%",
     marginTop: "10%",
   },
-  pismo: {
-    /* fontFamily: "inter-600", */
-    color: "rgba(255,255,255,1)",
+  buttonText: {
+    color: "white",
+    fontWeight: "700",
     fontSize: 16,
   },
 });
