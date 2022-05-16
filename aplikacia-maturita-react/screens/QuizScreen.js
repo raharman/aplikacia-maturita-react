@@ -1,15 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { Choice, Matrix, MultipleChoice } from "../components/Questions";
+
+let Index = 0;
 
 const QuizScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -19,18 +15,19 @@ const QuizScreen = ({ route }) => {
   const collectionRef = collection(db, "Kvízy", quizId, "questions");
 
   const [isLoading, setLoading] = useState(true);
-  const [questions, setQuestions] = useState();
+  const [quiz, setQuiz] = useState();
+  const [currentQuestion, setCurrentQuestion] = useState();
+  const [answers, setAnswers] = useState([]);
 
   const getQuiz = async () => {
     const data = await getDocs(collectionRef);
-
-    quiz = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    console.log(quiz);
-    handleQuestions();
+    setQuiz(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    setCurrentQuestion(data.docs[0].data());
     setLoading(false);
   };
 
   useEffect(() => {
+    Index = 0;
     getQuiz();
     navigation.setOptions({
       title: title,
@@ -57,15 +54,75 @@ const QuizScreen = ({ route }) => {
     return array;
   }
 
+  function updateAnswer(answer) {
+    console.log(answer);
+    setAnswers([
+      ...answers,
+      {
+        question: currentQuestion,
+        userAnswer: answer,
+      },
+    ]);
+  }
+
+  function handleNextQuestion() {
+    Index = quiz.findIndex((obj) => obj.question === currentQuestion.question);
+    if (Index < quiz.length - 1) setCurrentQuestion(quiz[Index + 1]);
+  }
+
+  function renderAnswers() {
+    currentQuestion.answers = shuffleOptions(currentQuestion.answers);
+
+    if (
+      currentQuestion.type === "trueFalse" ||
+      currentQuestion.type === "choice"
+    ) {
+      return (
+        <Choice
+          options={currentQuestion.answers}
+          updateAnswer={(e) => updateAnswer(e)}
+          handleNextQuestion={() => handleNextQuestion()}
+        />
+      );
+    } else if (currentQuestion.type === "multipleChoice") {
+      return (
+        <MultipleChoice
+          options={currentQuestion.answers}
+          updateAnswer={(e) => updateAnswer(e)}
+          handleNextQuestion={() => handleNextQuestion()}
+        />
+      );
+    } else {
+      return <Matrix options={currentQuestion.answers} />;
+    }
+  }
+
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
 
-  return <Text>Ahoj</Text>;
+  if (Index === quiz.length - 1) {
+    console.log(answers);
+    return <Text>Ended</Text>;
+  }
+
+  return (
+    <ScrollView>
+      <View style={styles.buttonContainer}>
+        <View key={currentQuestion?.id}>
+          <View style={styles.button}>
+            <Text style={styles.buttonHeader}>{currentQuestion?.question}</Text>
+          </View>
+          {renderAnswers()}
+        </View>
+      </View>
+    </ScrollView>
+  );
 };
+
 export default QuizScreen;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -85,10 +142,10 @@ const styles = StyleSheet.create({
   },
   answer: {
     backgroundColor: "#E1E1E1",
-    padding: 15,
+    padding: 5,
     borderRadius: 10,
     alignItems: "center",
-    marginVertical: 20,
+    //marginVertical: 20,
     /*     marginRight: "auto",
     marginLeft: "auto", */
   },
@@ -128,6 +185,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
+    marginHorizontal: 25,
   },
   selectedButton: {
     borderColor: "yellow",
