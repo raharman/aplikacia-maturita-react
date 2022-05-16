@@ -131,7 +131,8 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     width: "80%",
     justifyContent: "center",
-    margin: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   button: {
     backgroundColor: "#E1E1E1",
