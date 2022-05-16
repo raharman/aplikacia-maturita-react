@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   /*   head_rect: {
     width: "100%",
-    height: "7%",
+    height: "10%",
     backgroundColor: "rgba(74,122,150,1)",
 
     alignItems: "center",
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: "6%",
   },
   head_text: {
-    fontFamily: "roboto-700",
+    //fontFamily: "roboto-700",
     textAlign: "center",
     fontSize: "300%",
     color: "white",
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     height: "25%",
     backgroundColor: "rgba(215,215,215,1)",
     borderRadius: 19,
-    marginVertical: "6%",
+    marginVertical: "8%",
     justifyContent: "space-evenly",
     alignItems: "center",
     padding: "5%",
