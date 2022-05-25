@@ -4,8 +4,10 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import { Picker } from "@react-native-picker/picker";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -14,6 +16,9 @@ const SelectionScreen = ({ route, navigation }) => {
 
   const [topics, setTopics] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+
+  const [pickerValue, setPickerValue] = useState("Vyberte...");
+  const [questionCount, setQuestionCount] = useState();
 
   /* const [filteredData, setFilteredData] = useState([]); */
 
@@ -49,7 +54,7 @@ const SelectionScreen = ({ route, navigation }) => {
 
   if (title == "Kvízy") {
     return (
-      <ScrollView>
+      /* <ScrollView>
         <View style={styles.buttonContainer}>
           {quizzes
             .sort(function (a, b) {
@@ -74,6 +79,42 @@ const SelectionScreen = ({ route, navigation }) => {
                 </TouchableOpacity>
               );
             })}
+        </View>
+      </ScrollView> */
+
+      <ScrollView>
+        <View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Zadajte počet otázok"
+              value={questionCount}
+              onChangeText={(text) => setQuestionCount(text)}
+              style={styles.input}
+              keyboardType="numeric"
+            />
+          </View>
+          <View>
+            <Picker
+              style={styles.picker}
+              selectedValue={pickerValue}
+              onValueChange={(itemValue) => setPickerValue(itemValue)}
+            >
+              <Picker.Item label="Literatúra" value="literatúra"></Picker.Item>
+              <Picker.Item label="Gramatika" value="gramatika"></Picker.Item>
+              <Picker.Item label="Zmiešané" value="zmiešané"></Picker.Item>
+            </Picker>
+          </View>
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={() =>
+              navigation.navigate("Quiz", {
+                count: questionCount,
+                type: pickerValue,
+              })
+            }
+          >
+            <Text>Spustiť kvíz</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -144,5 +185,41 @@ const styles = StyleSheet.create({
     backgroundColor: "#4A7A96",
     borderRadius: 10,
     padding: 10,
+  },
+  inputContainer: {
+    width: "80%",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  input: {
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  picker: {
+    width: "80%",
+    justifyContent: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 25,
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 20,
+    borderColor: "orange",
+    borderWidth: 1,
+  },
+  startButton: {
+    backgroundColor: "#E1E1E1",
+    paddingHorizontal: 15,
+    paddingVertical: 25,
+    borderRadius: 10,
+    marginVertical: 10,
+    justifyContent: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 });

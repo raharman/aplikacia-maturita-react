@@ -10,10 +10,9 @@ let Index = 0;
 const QuizScreen = ({ route }) => {
   const navigation = useNavigation();
 
-  const { title, quizId } = route.params;
+  const { count, type } = route.params;
 
-  const collectionRef = collection(db, "Kvízy", quizId, "questions");
-  /* const collectionRef = collection(db, "Otázky"); */
+  const collectionRef = collection(db, "Otázky");
 
   const [isLoading, setLoading] = useState(true);
   const [quiz, setQuiz] = useState();
@@ -22,21 +21,61 @@ const QuizScreen = ({ route }) => {
 
   const getQuiz = async () => {
     const data = await getDocs(collectionRef);
-    setQuiz(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    setCurrentQuestion(data.docs[0].data());
-    setLoading(false);
+
+    const availableQuestions = [];
+
+    data.docs.map((doc) => {
+      availableQuestions.push(doc.data());
+    });
+
+    createQuiz(availableQuestions);
   };
 
   useEffect(() => {
     Index = 0;
     getQuiz();
     navigation.setOptions({
-      title: title,
+      title: "Kvíz",
       headerStyle: {
         backgroundColor: "#FBBBAD",
       },
     });
   }, [navigation]);
+
+  function createQuiz(availableQuestions) {
+    const quiz = [];
+
+    //VYRIESIT 2 ROVNAKE
+    for (let i = 0; i < count; i++) {
+      let question =
+        availableQuestions[
+          Math.floor(Math.random() * availableQuestions.length) + 0
+        ];
+
+      if (type === "zmiešané") {
+        quiz.push(question);
+      } else {
+        if (question.topicType.toLowerCase() === type.toLowerCase()) {
+          quiz.push(question);
+        } else {
+          while (true) {
+            if (question.topicType.toLowerCase() === type.toLowerCase()) break;
+            question =
+              availableQuestions[
+                Math.floor(Math.random() * availableQuestions.length) + 0
+              ];
+          }
+          quiz.push(question);
+        }
+      }
+    }
+
+    console.log(quiz);
+
+    setQuiz(quiz);
+    setCurrentQuestion(quiz[0]);
+    setLoading(false);
+  }
 
   function shuffleOptions(array) {
     let currentIndex = array.length,
