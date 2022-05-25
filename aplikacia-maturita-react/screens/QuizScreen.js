@@ -13,6 +13,7 @@ const QuizScreen = ({ route }) => {
   const { title, quizId } = route.params;
 
   const collectionRef = collection(db, "Kvízy", quizId, "questions");
+  /* const collectionRef = collection(db, "Otázky"); */
 
   const [isLoading, setLoading] = useState(true);
   const [quiz, setQuiz] = useState();
