@@ -8,21 +8,28 @@ import {
   Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
 const RegisterScreen = () => {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation();
+
+  const [Name, setName] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [School, setSchool] = useState("");
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        //console.log(user.uid);
         navigation.navigate("Home");
       }
     });
@@ -33,7 +40,15 @@ const RegisterScreen = () => {
   const SignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((res) => {
-        console.log(res);
+        setDoc(doc(db, "Používatelia", res.user.uid), {
+          id: res.user.uid,
+          first_name: Name,
+          last_name: LastName,
+          email: email,
+          role: "USER",
+          school: School,
+          points: 0,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -63,6 +78,24 @@ const RegisterScreen = () => {
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
+        />
+        <TextInput
+          placeholder="Name"
+          value={Name}
+          onChangeText={(text) => setName(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Surname"
+          value={LastName}
+          onChangeText={(text) => setLastName(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="School"
+          value={School}
+          onChangeText={(text) => setSchool(text)}
+          style={styles.input}
         />
       </View>
 
@@ -128,8 +161,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   image: {
-    width: 414,
-    height: 414,
+    width: 200,
+    height: 200,
   },
   welcomeHeader: {
     /* fontFamily: "roboto-700", */

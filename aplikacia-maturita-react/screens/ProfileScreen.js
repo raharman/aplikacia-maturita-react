@@ -1,11 +1,15 @@
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
+import { collection, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+
+  const [user, setUser] = useState({});
+  const docRef = doc(db, "Používatelia", auth.currentUser.uid);
 
   const SignOut = () => {
     auth
@@ -15,6 +19,12 @@ const ProfileScreen = () => {
         /* console.log(error) */
       });
   };
+
+  useEffect(() => {
+    return onSnapshot(docRef, (doc) => {
+      setUser(doc.data());
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -27,25 +37,21 @@ const ProfileScreen = () => {
           resizeMode="contain"
           style={styles.image}
         ></Image>
-        <Text style={styles.text}>Meno Priezvisko</Text>
+        <Text style={styles.text}>
+          {user?.first_name ?? ""} {user?.last_name ?? ""}
+        </Text>
       </View>
       <View>
         <View style={styles.margin}>
           <Text style={styles.text2}>Počet bodov:</Text>
           <View style={styles.rect2}>
-            <Text style={styles.text2}>xxx</Text>
+            <Text style={styles.text2}>{user?.points ?? ""}</Text>
           </View>
         </View>
         <View style={styles.margin}>
           <Text style={styles.text2}>Škola:</Text>
           <View style={styles.rect2}>
-            <Text style={styles.text2}>xxx</Text>
-          </View>
-        </View>
-        <View style={styles.margin}>
-          <Text style={styles.text2}>Vek:</Text>
-          <View style={styles.rect2}>
-            <Text style={styles.text2}>xxx</Text>
+            <Text style={styles.text2}>{user?.school ?? ""}</Text>
           </View>
         </View>
       </View>
