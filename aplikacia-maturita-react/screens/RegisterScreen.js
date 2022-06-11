@@ -68,31 +68,36 @@ const RegisterScreen = () => {
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
+          placeholderTextColor={"#B6B4B4"}
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder="Password"
+          placeholder="Heslo"
+          placeholderTextColor={"#B6B4B4"}
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
         />
         <TextInput
-          placeholder="Name"
+          placeholder="Meno"
+          placeholderTextColor={"#B6B4B4"}
           value={Name}
           onChangeText={(text) => setName(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder="Surname"
+          placeholder="Priezvisko"
+          placeholderTextColor={"#B6B4B4"}
           value={LastName}
           onChangeText={(text) => setLastName(text)}
           style={styles.input}
         />
         <TextInput
-          placeholder="School"
+          placeholder="Škola"
+          placeholderTextColor={"#B6B4B4"}
           value={School}
           onChangeText={(text) => setSchool(text)}
           style={styles.input}
@@ -161,8 +166,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
   },
   welcomeHeader: {
     /* fontFamily: "roboto-700", */

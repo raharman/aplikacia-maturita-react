@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { db } from "../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import RenderHtml from "react-native-render-html";
+import { Choice, MultipleChoice } from "../components/Questions";
 
 const TopicScreen = ({ route }) => {
   const { width } = useWindowDimensions();

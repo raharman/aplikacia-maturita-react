@@ -10,6 +10,8 @@ import React, { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { SearchBar } from "@rneui/themed";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const SelectionScreen = ({ route, navigation }) => {
   const { title } = route.params;
@@ -17,7 +19,9 @@ const SelectionScreen = ({ route, navigation }) => {
   const [topics, setTopics] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
 
-  const [pickerValue, setPickerValue] = useState("Vyberte...");
+  const [pickerValue, setPickerValue] = useState("Literatúra");
+  const [pickerValueCount, setPickerValueCount] = useState(5);
+
   const [questionCount, setQuestionCount] = useState();
 
   /* const [filteredData, setFilteredData] = useState([]); */
@@ -29,6 +33,12 @@ const SelectionScreen = ({ route, navigation }) => {
     setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     setQuizzes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     /* setFilteredData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))); */
+  };
+
+  const [search, setSearch] = useState("");
+
+  const updateSearch = (search) => {
+    setSearch(search);
   };
 
   useEffect(() => {
@@ -43,7 +53,9 @@ const SelectionScreen = ({ route, navigation }) => {
             : title == "Gramatika"
             ? "#333f58"
             : "#FBBBAD",
+        borderBottomWidth: 0,
       },
+      headerShadowVisible: false,
       headerBackTitleVisible: false,
       /* headerSearchBarOptions: {
         placeholder: "Vyhľadať",
@@ -84,14 +96,16 @@ const SelectionScreen = ({ route, navigation }) => {
 
       <ScrollView>
         <View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder="Zadajte počet otázok"
-              value={questionCount}
-              onChangeText={(text) => setQuestionCount(text)}
-              style={styles.input}
-              keyboardType="numeric"
-            />
+          <View>
+            <Picker
+              style={styles.picker}
+              selectedValue={pickerValueCount}
+              onValueChange={(itemValue) => setPickerValueCount(itemValue)}
+            >
+              <Picker.Item label="Malý - 5 otázok" value="5"></Picker.Item>
+              <Picker.Item label="Stredný - 10 otázok" value="10"></Picker.Item>
+              <Picker.Item label="Veľký - 15 otázok" value="15"></Picker.Item>
+            </Picker>
           </View>
           <View>
             <Picker
@@ -108,45 +122,73 @@ const SelectionScreen = ({ route, navigation }) => {
             style={styles.startButton}
             onPress={() =>
               navigation.navigate("Quiz", {
-                count: questionCount,
+                count: pickerValueCount,
                 type: pickerValue,
               })
             }
           >
-            <Text>Spustiť kvíz</Text>
+            <Text style={styles.buttonText}>Spustiť kvíz</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     );
   } else {
     return (
-      <ScrollView>
-        <View style={styles.buttonContainer}>
-          {topics
-            .sort(function (a, b) {
-              if (a.name > b.name) return 1;
-              if (a.name < b.name) return -1;
-              return 0;
-            })
-            .map((topic) => {
-              return (
-                <TouchableOpacity
-                  key={topic.id}
-                  onPress={() =>
-                    navigation.navigate("Selected", {
-                      title: topic.name,
-                      topicId: topic.id,
-                      type: topic.type,
-                    })
-                  }
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonHeader}>{topic.name}</Text>
-                </TouchableOpacity>
-              );
-            })}
+      <View style={{ flex: 1, margin: 0 }}>
+        <View style={{ margin: 0 }}>
+          <SearchBar
+            placeholder="Vyhľadávanie"
+            onChangeText={updateSearch}
+            value={search}
+            round={true}
+            searchIcon={<Ionicons name="search" size={16} color="black" />}
+            showLoading={false}
+            containerStyle={[
+              styles.searchContainer,
+              {
+                backgroundColor:
+                  title == "Literatúra"
+                    ? "rgba(205, 57, 88, 0.48)"
+                    : title == "Gramatika"
+                    ? "#333f58"
+                    : "#FBBBAD",
+              },
+            ]}
+            inputContainerStyle={styles.inputContainer}
+            /* clearIcon={<Ionicons name="close" size={16} color="black" />} */
+          />
         </View>
-      </ScrollView>
+        <ScrollView>
+          <View style={styles.buttonContainer}>
+            {topics
+              .sort(function (a, b) {
+                if (a.name > b.name) return 1;
+                if (a.name < b.name) return -1;
+                return 0;
+              })
+              .filter((topic) =>
+                topic.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((topic) => {
+                return (
+                  <TouchableOpacity
+                    key={topic.id}
+                    onPress={() =>
+                      navigation.navigate("Selected", {
+                        title: topic.name,
+                        topicId: topic.id,
+                        type: topic.type,
+                      })
+                    }
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonHeader}>{topic.name}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 };
@@ -186,11 +228,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-  inputContainer: {
+  /* inputContainer: {
     width: "80%",
     marginRight: "auto",
     marginLeft: "auto",
-  },
+  }, */
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
@@ -213,13 +255,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   startButton: {
-    backgroundColor: "#E1E1E1",
-    paddingHorizontal: 15,
-    paddingVertical: 25,
-    borderRadius: 10,
-    marginVertical: 10,
+    marginTop: 30,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "rgb(251, 187, 173)",
     justifyContent: "center",
     marginLeft: "auto",
     marginRight: "auto",
+  },
+  buttonText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white",
+  },
+  searchContainer: {
+    backgroundColor: "#333f58",
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderWidth: 0,
+    height: 50,
+    /* transform: [{ translate: [0, -5] }], */
+  },
+  inputContainer: {
+    height: 35,
+    backgroundColor: "white",
+    width: "90%",
+    borderRadius: 7,
+    alignSelf: "center",
   },
 });

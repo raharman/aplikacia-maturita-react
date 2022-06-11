@@ -8,18 +8,19 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import app from "../app.json";
+/* import app from "../app.json";
 import { AppRegistry, Platform } from "react-native";
-import { registerRootComponent } from "expo";
+import { registerRootComponent } from "expo"; */
+import "react-native-reanimated";
 
 const Uvod = () => {
   const navigation = useNavigation();
 
-  if (Platform.OS == "android") {
+  /* if (Platform.OS == "android") {
     registerRootComponent(App);
   } else {
     AppRegistry.registerComponent(app?.expo?.name, () => App);
-  }
+  } */
 
   return (
     <View style={styles.container}>

@@ -72,6 +72,7 @@ export const Choice = (props) => {
           onPress={() => {
             props.updateAnswer(selected);
             props.handleNextQuestion();
+            setSelected(false);
           }}
         >
           <Text style={styles.nextButtonText}>Ďalšia otázka</Text>

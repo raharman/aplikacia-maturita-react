@@ -16,6 +16,8 @@ import SelectionScreen from "./screens/SelectionScreen";
 import TopicScreen from "./screens/TopicScreen";
 import { auth } from "./firebase";
 import QuizScreen from "./screens/QuizScreen";
+import "react-native-gesture-handler";
+import "react-native-reanimated";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
