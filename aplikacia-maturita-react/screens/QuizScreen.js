@@ -3,7 +3,6 @@ import {
   Text,
   View,
   ScrollView,
-  SafeAreaView,
   Pressable,
   TouchableOpacity,
 } from "react-native";
@@ -14,8 +13,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { Choice, Matrix, MultipleChoice } from "../components/Questions";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import "react-native-reanimated";
-
-global.__reanimatedWorkletInit = () => {};
 
 let Index = 0;
 
@@ -161,6 +158,16 @@ const QuizScreen = ({ route }) => {
         answer.question.type === "choice"
       ) {
         if (answer.userAnswer.answer === true) score++;
+      }
+      if (answer.question.type === "multipleChoice") {
+        if (!answer.userAnswer.some((obj) => obj.answer === false)) {
+          let selectedCount = answer.userAnswer.length;
+          let correctCount = answer.question.answers.filter(
+            (obj) => obj.answer === true
+          ).length;
+          if (selectedCount === correctCount) score++;
+          else score += (1 / correctCount) * selectedCount;
+        }
       }
     });
 
