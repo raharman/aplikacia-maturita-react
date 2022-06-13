@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
@@ -57,14 +58,14 @@ const RegisterScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View>
+      {Platform.OS !== "android" ? (
         <Image
           source={require("../assets/images/logo.png")}
           resizeMode="contain"
           style={styles.image}
-        ></Image>
-        <Text style={styles.welcomeHeader}> Registrácia </Text>
-      </View>
+        />
+      ) : null}
+      <Text style={styles.welcomeHeader}> Registrácia </Text>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -166,8 +167,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   image: {
-    width: 300,
-    height: 300,
+    alignSelf: "center",
+    width: "70%",
+    height: "25%",
   },
   welcomeHeader: {
     /* fontFamily: "roboto-700", */

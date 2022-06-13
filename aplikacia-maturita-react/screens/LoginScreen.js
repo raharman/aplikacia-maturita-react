@@ -55,14 +55,12 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View>
-        <Image
-          source={require("../assets/images/logo.png")}
-          resizeMode="contain"
-          style={styles.image}
-        ></Image>
-        <Text style={styles.welcomeHeader}> Prihlásenie </Text>
-      </View>
+      <Image
+        source={require("../assets/images/logo.png")}
+        resizeMode="contain"
+        style={styles.image}
+      ></Image>
+      <Text style={styles.welcomeHeader}> Prihlásenie </Text>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -155,8 +153,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   image: {
-    width: 414,
-    height: 414,
+    alignSelf: "center",
+    width: "70%",
+    height: "25%",
   },
   welcomeHeader: {
     /* fontFamily: "roboto-700", */

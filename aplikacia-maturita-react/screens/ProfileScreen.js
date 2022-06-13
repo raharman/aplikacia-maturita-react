@@ -16,7 +16,7 @@ const ProfileScreen = () => {
       .signOut()
       .then(() => {})
       .catch((error) => {
-        /* console.log(error) */
+        console.log(error);
       });
   };
 
@@ -28,35 +28,21 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.head_rect}>
-        <Text style={styles.head_text}>Profil</Text>
-      </View> */}
-      <View style={styles.rect}>
+      <View style={styles.card}>
         <Image
           source={require("../assets/images/profilovka.jpg")}
           resizeMode="contain"
-          style={styles.image}
-        ></Image>
+          style={styles.profileImage}
+        />
         <Text style={styles.text}>
           {user?.first_name ?? ""} {user?.last_name ?? ""}
         </Text>
+        <Text style={styles.text}>Skóre: {user?.points ?? ""}</Text>
+        <Text style={styles.text}>Škola: {user?.school ?? ""}</Text>
       </View>
-      <View>
-        <View style={styles.margin}>
-          <Text style={styles.text2}>Počet bodov:</Text>
-          <View style={styles.rect2}>
-            <Text style={styles.text2}>{user?.points ?? ""}</Text>
-          </View>
-        </View>
-        <View style={styles.margin}>
-          <Text style={styles.text2}>Škola:</Text>
-          <View style={styles.rect2}>
-            <Text style={styles.text2}>{user?.school ?? ""}</Text>
-          </View>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.rect3} onPress={SignOut}>
-        <Text style={styles.text3}>Odhlásiť sa</Text>
+
+      <TouchableOpacity style={styles.logoutContainer} onPress={SignOut}>
+        <Text style={styles.logoutText}>Odhlásiť sa</Text>
       </TouchableOpacity>
     </View>
   );
@@ -66,76 +52,41 @@ export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
   },
-  /*   head_rect: {
-    width: "100%",
-    height: "10%",
-    backgroundColor: "rgba(74,122,150,1)",
-
+  card: {
+    backgroundColor: "#E1E1E1",
+    padding: 25,
+    borderRadius: 15,
+    marginVertical: 20,
     alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    marginTop: "5%",
-    marginBottom: "6%",
-  },
-  head_text: {
-    //fontFamily: "roboto-700",
-    textAlign: "center",
-    fontSize: "300%",
-    color: "white",
-  }, */
-  rect: {
-    width: "75%",
-    height: "25%",
-    backgroundColor: "rgba(215,215,215,1)",
-    borderRadius: 19,
-    marginVertical: "8%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    padding: "5%",
   },
   text: {
-    /* fontFamily: "inter-600", */
-    textAlign: "center",
-    /* fontSize: "150%", */
+    color: "3C3C44",
+    fontSize: 24,
+    marginTop: 10,
   },
-  rect2: {
-    width: "auto",
-    height: "auto",
-    backgroundColor: "rgba(74,122,150,10)",
-    padding: "1%",
-    borderRadius: 19,
-    justifyContent: "center",
-    alignItems: "center",
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 15,
   },
-  text2: {
-    /* fontFamily: "inter-600", */
-    /* fontSize: "120%", */
-  },
-  image: {
-    width: "100%",
-    height: "50%",
-  },
-  rect3: {
-    width: "45%",
-    height: "7%",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
+  schoolContainer: {},
+  schoolText: {},
+  logoutContainer: {
     backgroundColor: "rgba(44,92,120,1)",
-    borderRadius: 19,
-    marginTop: "6%",
-  },
-  text3: {
-    /* fontFamily: "inter-600", */
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
     textAlign: "center",
-    /* fontSize: "150%", */
-    color: "white",
+    marginRight: "auto",
+    marginLeft: "auto",
+    marginVertical: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
   },
-  margin: {
-    marginVertical: "5%",
+  logoutText: {
+    color: "white",
+    fontSize: 16,
   },
 });

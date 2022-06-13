@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -24,6 +24,8 @@ export default function App() {
   const Tab = createBottomTabNavigator();
 
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -75,7 +77,7 @@ export default function App() {
             headerTintColor: "#fff",
             headerTitleStyle: {
               fontWeight: "bold",
-              fontSize: 32,
+              fontSize: 24,
             },
           }}
         />

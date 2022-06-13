@@ -411,8 +411,7 @@ export const styles = StyleSheet.create({
     marginVertical: 20,
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
+    borderRadius: 10,
     backgroundColor: "rgb(251, 187, 173)",
   },
   question: {
