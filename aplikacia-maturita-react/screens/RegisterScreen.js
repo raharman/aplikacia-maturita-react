@@ -7,31 +7,36 @@ import {
   View,
   Image,
   Platform,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import { Picker } from "@react-native-picker/picker";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [Name, setName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [School, setSchool] = useState("");
+  const [School, setSchool] = useState("GPH");
+
+  const showToast = (message) => {
+    Toast.show({
+      type: "error",
+      text1: message,
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        //console.log(user.uid);
-        navigation.navigate("Home");
+        /* navigation.replace("Home"); */
       }
     });
 
@@ -39,6 +44,9 @@ const RegisterScreen = () => {
   }, []);
 
   const SignUp = () => {
+    if (!(email && password && Name && LastName && School))
+      return showToast("Všetky polia musia byť vyplnené!");
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((res) => {
         setDoc(doc(db, "Používatelia", res.user.uid), {
@@ -51,70 +59,103 @@ const RegisterScreen = () => {
           points: 0,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          showToast("Táto emailová adresa sa už používa!");
+        } else if (error.code === "auth/missing-email") {
+          showToast("Zadajte emailovú adresu!");
+        } else if (error.code === "auth/invalid-email") {
+          showToast("Emailová adresa chýba alebo je neplatná!");
+        } else if (error.code === "auth/internal-error") {
+          showToast("Nastala chyba, skúste to neskôr!");
+        } else if (error.code === "auth/weak-password") {
+          showToast("Heslo musí obsahovať aspoň 6 znakov!");
+        }
+
+        console.error(error);
       });
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      {Platform.OS !== "android" ? (
-        <Image
-          source={require("../assets/images/logo.png")}
-          resizeMode="contain"
-          style={styles.image}
-        />
-      ) : null}
-      <Text style={styles.welcomeHeader}> Registrácia </Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor={"#B6B4B4"}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Heslo"
-          placeholderTextColor={"#B6B4B4"}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-        <TextInput
-          placeholder="Meno"
-          placeholderTextColor={"#B6B4B4"}
-          value={Name}
-          onChangeText={(text) => setName(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Priezvisko"
-          placeholderTextColor={"#B6B4B4"}
-          value={LastName}
-          onChangeText={(text) => setLastName(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Škola"
-          placeholderTextColor={"#B6B4B4"}
-          value={School}
-          onChangeText={(text) => setSchool(text)}
-          style={styles.input}
-        />
-      </View>
+    <KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      style={{
+        height: "100%",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {Platform.OS !== "android" ? (
+            <Image
+              source={require("../assets/images/logo.png")}
+              resizeMode="contain"
+              style={styles.image}
+            />
+          ) : null}
+          <Text style={styles.welcomeHeader}> Registrácia </Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor={"#B6B4B4"}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Heslo"
+              placeholderTextColor={"#B6B4B4"}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              style={styles.input}
+              secureTextEntry
+            />
+            <TextInput
+              placeholder="Meno"
+              placeholderTextColor={"#B6B4B4"}
+              value={Name}
+              onChangeText={(text) => setName(text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Priezvisko"
+              placeholderTextColor={"#B6B4B4"}
+              value={LastName}
+              onChangeText={(text) => setLastName(text)}
+              style={styles.input}
+            />
+          </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => SignUp()}
-          style={[styles.button, { backgroundColor: "rgba(182,180,180,1)" }]}
-        >
-          <Text style={[styles.buttonOutlineText, styles.buttonText]}>
-            Zaregistrovať sa
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <View>
+            <Picker
+              style={styles.picker}
+              selectedValue={School}
+              itemStyle={{ height: 125 }}
+              onValueChange={(School) => setSchool(School)}
+            >
+              <Picker.Item
+                label="Gymnázium Pavla Horova"
+                value="GPH"
+              ></Picker.Item>
+              <Picker.Item
+                label="Gymnázium Ľudovíta Štúra"
+                value="GĽŠ"
+              ></Picker.Item>
+            </Picker>
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={() => SignUp()} style={styles.button}>
+              <Text style={[styles.buttonOutlineText, styles.buttonText]}>
+                Zaregistrovať sa
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -123,8 +164,8 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: "15%",
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
   },
   inputContainer: {
@@ -168,15 +209,31 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: "center",
-    width: "70%",
-    height: "25%",
+    width: "80%",
+    height: "45%",
   },
   welcomeHeader: {
-    /* fontFamily: "roboto-700", */
     color: "rgba(51,51,51,1)",
     textAlign: "center",
     alignItems: "center",
     fontSize: 48,
     fontWeight: "bold",
+  },
+  picker: {
+    justifyContent: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 20,
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderColor: "rgb(182,180,180)",
+    borderWidth: 1,
+    width: 325,
+  },
+  scrollContainer: {
+    alignSelf: "center",
+    height: "100%",
   },
 });

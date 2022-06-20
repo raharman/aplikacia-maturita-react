@@ -166,7 +166,7 @@ const QuizScreen = ({ route }) => {
             (obj) => obj.answer === true
           ).length;
           if (selectedCount === correctCount) score++;
-          else score += (1 / correctCount) * selectedCount;
+          /* else score += (1 / correctCount) * selectedCount; */
         }
       }
     });
@@ -199,7 +199,7 @@ const QuizScreen = ({ route }) => {
             width={15}
             fill={parseInt((score / answers.length) * 100, 10)}
             tintColor="#2ecc71"
-            backgroundColor="#ecf0f1"
+            backgroundColor="#c5c9c9"
           >
             {(fill) => (
               <Text style={{ fontSize: 32, fontWeight: "bold" }}>
@@ -247,8 +247,22 @@ const QuizScreen = ({ route }) => {
                 </Text>
                 <View
                   style={{
-                    backgroundColor:
-                      answer.userAnswer.answer == true ? "#2ecc71" : "red",
+                    backgroundColor: (() => {
+                      if (answer.question.type === "multipleChoice") {
+                        //Change Background color of user answers based on correctness (multipleChoice)
+                        let selectedCount = answer.userAnswer.length;
+                        let correctCount = answer.question.answers.filter(
+                          (obj) => obj.answer === true
+                        ).length;
+                        if (selectedCount === correctCount) return "#2ecc71";
+                        else return "#f1f57f";
+                      }
+                      //Change Background color of user answers based on correctness (TrueFalse or Single Choice)
+                      else
+                        return answer.userAnswer.answer == true
+                          ? "#2ecc71"
+                          : "#FF7F7F";
+                    })(),
                     marginTop: 5,
                     borderRadius: 10,
                     padding: 10,

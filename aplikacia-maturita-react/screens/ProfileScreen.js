@@ -1,13 +1,18 @@
 import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
-import { collection, doc, getDocs, onSnapshot } from "firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { doc, onSnapshot } from "firebase/firestore";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React, { useState, useEffect } from "react";
+import Avatar from "react-native-boring-avatars";
 
 const ProfileScreen = () => {
-  const navigation = useNavigation();
-
   const [user, setUser] = useState({});
   const docRef = doc(db, "Používatelia", auth.currentUser.uid);
 
@@ -26,25 +31,30 @@ const ProfileScreen = () => {
     });
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <Image
-          source={require("../assets/images/profilovka.jpg")}
-          resizeMode="contain"
-          style={styles.profileImage}
-        />
-        <Text style={styles.text}>
-          {user?.first_name ?? ""} {user?.last_name ?? ""}
-        </Text>
-        <Text style={styles.text}>Skóre: {user?.points ?? ""}</Text>
-        <Text style={styles.text}>Škola: {user?.school ?? ""}</Text>
-      </View>
+  const profilePicture = user.id;
 
-      <TouchableOpacity style={styles.logoutContainer} onPress={SignOut}>
-        <Text style={styles.logoutText}>Odhlásiť sa</Text>
-      </TouchableOpacity>
-    </View>
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <Avatar
+            size={160}
+            name={profilePicture}
+            variant="beam"
+            colors={["#F2ECB0", "#EBB667", "#D65C56", "#823C3C", "#1B1C26"]}
+          />
+          <Text style={styles.text}>
+            {user?.first_name ?? ""} {user?.last_name ?? ""}
+          </Text>
+          <Text style={styles.text}>Skóre: {user?.points ?? ""}</Text>
+          <Text style={styles.text}>Škola: {user?.school ?? ""}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.logoutContainer} onPress={SignOut}>
+          <Text style={styles.logoutText}>Odhlásiť sa</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -62,14 +72,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "3C3C44",
+    color: "#3C3C44",
     fontSize: 24,
     marginTop: 10,
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 15,
   },
   schoolContainer: {},
   schoolText: {},

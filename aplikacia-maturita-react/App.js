@@ -18,6 +18,7 @@ import { auth } from "./firebase";
 import QuizScreen from "./screens/QuizScreen";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -189,37 +190,49 @@ export default function App() {
     );
   } else {
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Uvod"
-            options={{ headerShown: false }}
-            component={Uvod}
-          />
-          <Stack.Screen
-            name="Login"
-            options={{ headerShown: false }}
-            component={LoginScreen}
-          />
-          <Stack.Screen
-            name="Register"
-            options={{ headerShown: false }}
-            component={RegisterScreen}
-          />
-          <Stack.Screen
-            name="Reset"
-            options={{
-              title: "Zabudol som heslo",
-              headerTransparent: true,
-              statusBarHidden: true,
-              headerStyle: {
-                borderBottomWidth: 0,
-              },
-            }}
-            component={ResetScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Uvod"
+              options={{ headerShown: false }}
+              component={Uvod}
+            />
+            <Stack.Screen
+              name="Login"
+              options={{ headerShown: false }}
+              component={LoginScreen}
+            />
+            <Stack.Screen
+              name="Register"
+              options={{
+                title: "",
+                headerTransparent: true,
+                statusBarHidden: true,
+                headerStyle: {
+                  borderBottomWidth: 0,
+                },
+                headerBackTitleVisible: false,
+              }}
+              component={RegisterScreen}
+            />
+            <Stack.Screen
+              name="Reset"
+              options={{
+                title: "",
+                headerTransparent: true,
+                statusBarHidden: true,
+                headerStyle: {
+                  borderBottomWidth: 0,
+                },
+                headerBackTitleVisible: false,
+              }}
+              component={ResetScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Toast />
+      </>
     );
   }
 }

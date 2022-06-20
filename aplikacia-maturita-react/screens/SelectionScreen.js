@@ -22,17 +22,12 @@ const SelectionScreen = ({ route, navigation }) => {
   const [pickerValue, setPickerValue] = useState("Literatúra");
   const [pickerValueCount, setPickerValueCount] = useState(5);
 
-  const [questionCount, setQuestionCount] = useState();
-
-  /* const [filteredData, setFilteredData] = useState([]); */
-
   const topicsCollectionRef = collection(db, title);
 
   const getTopics = async () => {
     const data = await getDocs(topicsCollectionRef);
     setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     setQuizzes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    /* setFilteredData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))); */
   };
 
   const [search, setSearch] = useState("");
@@ -57,43 +52,11 @@ const SelectionScreen = ({ route, navigation }) => {
       },
       headerShadowVisible: false,
       headerBackTitleVisible: false,
-      /* headerSearchBarOptions: {
-        placeholder: "Vyhľadať",
-        barTintColor: "#FFFFFF",
-      }, */
     });
   }, [navigation]);
 
   if (title == "Kvízy") {
     return (
-      /* <ScrollView>
-        <View style={styles.buttonContainer}>
-          {quizzes
-            .sort(function (a, b) {
-              if (a.name > b.name) return 1;
-              if (a.name < b.name) return -1;
-              return 0;
-            })
-            .map((quiz) => {
-              return (
-                <TouchableOpacity
-                  key={quiz.id}
-                  onPress={() =>
-                    navigation.navigate("Quiz", {
-                      title: quiz.name,
-                      quizId: quiz.id,
-                      type: quiz.type,
-                    })
-                  }
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonHeader}>{quiz.name}</Text>
-                </TouchableOpacity>
-              );
-            })}
-        </View>
-      </ScrollView> */
-
       <ScrollView>
         <View>
           <View>
@@ -155,6 +118,7 @@ const SelectionScreen = ({ route, navigation }) => {
               },
             ]}
             inputContainerStyle={styles.inputContainer}
+            /* Nepoužitá ikonka */
             /* clearIcon={<Ionicons name="close" size={16} color="black" />} */
           />
         </View>
@@ -228,11 +192,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-  /* inputContainer: {
-    width: "80%",
-    marginRight: "auto",
-    marginLeft: "auto",
-  }, */
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
@@ -247,8 +206,7 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     marginTop: 25,
     backgroundColor: "white",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    padding: 15,
     borderRadius: 10,
     marginTop: 20,
     borderColor: "orange",
