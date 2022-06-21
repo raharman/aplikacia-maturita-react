@@ -10,7 +10,6 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import Avatar from "react-native-boring-avatars";
 
 const ProfileScreen = () => {
   const [user, setUser] = useState({});
@@ -31,18 +30,31 @@ const ProfileScreen = () => {
     });
   }, []);
 
-  const profilePicture = user.id;
+  const profilePicture = user?.id;
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.card}>
-          <Avatar
-            size={160}
-            name={profilePicture}
-            variant="beam"
-            colors={["#F2ECB0", "#EBB667", "#D65C56", "#823C3C", "#1B1C26"]}
-          />
+          <View>
+            <Image
+              source={{
+                uri:
+                  "https://avatars.dicebear.com/api/personas/:" +
+                  profilePicture +
+                  ".png",
+              }}
+              style={{
+                width: 250,
+                height: 250,
+                backgroundColor: "#4A7A96",
+                borderColor: "#2C5C78",
+                borderWidth: 5,
+                borderRadius: 360,
+              }}
+            />
+          </View>
+
           <Text style={styles.text}>
             {user?.first_name ?? ""} {user?.last_name ?? ""}
           </Text>

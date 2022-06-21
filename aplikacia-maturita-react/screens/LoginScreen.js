@@ -64,6 +64,7 @@ const LoginScreen = () => {
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
+          keyboardType="email-address"
         />
         <TextInput
           placeholder="Heslo"

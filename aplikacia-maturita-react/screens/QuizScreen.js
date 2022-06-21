@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { collection, getDocs, setDoc, doc, getDoc } from "firebase/firestore";
 import { Choice, Matrix, MultipleChoice } from "../components/Questions";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import "react-native-reanimated";
@@ -210,6 +210,20 @@ const QuizScreen = ({ route }) => {
         </View>
         <Text style={styles.finalText}>
           Správne {score} z {answers.length} otázok
+          {/* 
+          
+          Pripočítavanie skóre 
+          
+          */}
+          {(() => {
+            getDoc(doc(db, "Používatelia", auth.currentUser.uid)).then(
+              (document) =>
+                setDoc(doc(db, "Používatelia", auth.currentUser.uid), {
+                  ...document.data(),
+                  points: document.data().points + score,
+                })
+            );
+          })()}
         </Text>
 
         {/* 

@@ -71,7 +71,6 @@ const RegisterScreen = () => {
         } else if (error.code === "auth/weak-password") {
           showToast("Heslo musí obsahovať aspoň 6 znakov!");
         }
-
         console.error(error);
       });
   };
@@ -104,6 +103,7 @@ const RegisterScreen = () => {
               value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
+              keyboardType="email-address"
             />
             <TextInput
               placeholder="Heslo"

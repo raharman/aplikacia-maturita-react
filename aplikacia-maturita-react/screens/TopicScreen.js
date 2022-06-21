@@ -48,9 +48,9 @@ const TopicScreen = ({ route }) => {
     type == "Literatúra" ? "rgba(205, 57, 88, 0.48)" : "#333f58";
 
   if (Platform.OS === "android") {
-    tagsStyles.p.width = 320;
-    tagsStyles.ul.width = 320;
-    tagsStyles.ol.width = 320;
+    tagsStyles.p.width = 300;
+    tagsStyles.ul.width = 300;
+    tagsStyles.ol.width = 300;
   }
 
   return (
