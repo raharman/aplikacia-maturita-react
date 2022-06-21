@@ -41,11 +41,12 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '80%',
+    width: "80%",
     alignItems: "center",
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 'auto',
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   rect: {
     width: "80%",
@@ -59,8 +60,8 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    color: '#3C3C44',
-    fontWeight: '700',
+    color: "#3C3C44",
+    fontWeight: "700",
     fontSize: 24,
   },
 });

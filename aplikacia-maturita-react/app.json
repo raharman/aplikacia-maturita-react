@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "aplikacia-maturita-react",
-    "slug": "aplikacia-maturita-react",
+    "name": "Maturita vo vrecku",
+    "slug": "aplikacia-maturita",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
@@ -15,10 +15,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "sk.maturita.vo.vrecku"
     },
     "android": {
-      "package": "maturita.maturita",
+      "package": "sk.maturita.vo.vrecku",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

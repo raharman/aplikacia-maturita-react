@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -16,12 +16,17 @@ import SelectionScreen from "./screens/SelectionScreen";
 import TopicScreen from "./screens/TopicScreen";
 import { auth } from "./firebase";
 import QuizScreen from "./screens/QuizScreen";
+import "react-native-gesture-handler";
+import "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
 
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -73,7 +78,7 @@ export default function App() {
             headerTintColor: "#fff",
             headerTitleStyle: {
               fontWeight: "bold",
-              fontSize: 32,
+              fontSize: 24,
             },
           }}
         />
@@ -185,37 +190,49 @@ export default function App() {
     );
   } else {
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Uvod"
-            options={{ headerShown: false }}
-            component={Uvod}
-          />
-          <Stack.Screen
-            name="Login"
-            options={{ headerShown: false }}
-            component={LoginScreen}
-          />
-          <Stack.Screen
-            name="Register"
-            options={{ headerShown: false }}
-            component={RegisterScreen}
-          />
-          <Stack.Screen
-            name="Reset"
-            options={{
-              title: "Zabudol som heslo",
-              headerTransparent: true,
-              statusBarHidden: true,
-              headerStyle: {
-                borderBottomWidth: 0,
-              },
-            }}
-            component={ResetScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Uvod"
+              options={{ headerShown: false }}
+              component={Uvod}
+            />
+            <Stack.Screen
+              name="Login"
+              options={{ headerShown: false }}
+              component={LoginScreen}
+            />
+            <Stack.Screen
+              name="Register"
+              options={{
+                title: "",
+                headerTransparent: true,
+                statusBarHidden: true,
+                headerStyle: {
+                  borderBottomWidth: 0,
+                },
+                headerBackTitleVisible: false,
+              }}
+              component={RegisterScreen}
+            />
+            <Stack.Screen
+              name="Reset"
+              options={{
+                title: "",
+                headerTransparent: true,
+                statusBarHidden: true,
+                headerStyle: {
+                  borderBottomWidth: 0,
+                },
+                headerBackTitleVisible: false,
+              }}
+              component={ResetScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Toast />
+      </>
     );
   }
 }

@@ -72,6 +72,7 @@ export const Choice = (props) => {
           onPress={() => {
             props.updateAnswer(selected);
             props.handleNextQuestion();
+            setSelected(false);
           }}
         >
           <Text style={styles.nextButtonText}>Ďalšia otázka</Text>
@@ -113,7 +114,60 @@ export const MultipleChoice = (props) => {
 };
 
 export const Matrix = (props) => {
-  return props.options.map((answer, key) => {
-    return <Answer answer={answer} key={key} />;
+  const [selected, setSelected] = useState([]);
+
+  const leftAnswers = [];
+  const rightAnswers = [];
+
+  props.options.map((option) => {
+    leftAnswers.push(option.answer[0]);
+    rightAnswers.push(option.text);
+  });
+
+  const colors = [];
+
+  for (let index = 0; index < leftAnswers.length; index++) {
+    //colors.push(Math.floor(Math.random() * 16777215).toString(16));
+    colors.push(getRandomColor());
+  }
+
+  return leftAnswers.map((answer, key) => {
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 10,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          <View style={{ flex: 1, marginRight: 10 }}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                console.log();
+              }}
+            >
+              <Text style={styles.answer}>{answer}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity style={styles.button} onPress={() => {}}>
+              <Text style={styles.answer}>{rightAnswers[key]}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
   });
 };
+
+function getRandomColor() {
+  var letters = "0123456789ABCDEF".split("");
+  var color = "#";
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.round(Math.random() * 15)];
+  }
+  return color;
+}
