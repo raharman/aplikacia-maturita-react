@@ -22,6 +22,7 @@ const RegisterScreen = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [Name, setName] = useState("");
   const [LastName, setLastName] = useState("");
   const [School, setSchool] = useState("GPH");
@@ -44,35 +45,39 @@ const RegisterScreen = () => {
   }, []);
 
   const SignUp = () => {
-    if (!(email && password && Name && LastName && School))
-      return showToast("Všetky polia musia byť vyplnené!");
+    if (password !== confirmPassword) {
+      showToast("Heslá sa nezhodujú!");
+    } else {
+      if (!(email && password && Name && LastName && School))
+        return showToast("Všetky polia musia byť vyplnené!");
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        setDoc(doc(db, "Používatelia", res.user.uid), {
-          id: res.user.uid,
-          first_name: Name,
-          last_name: LastName,
-          email: email,
-          role: "USER",
-          school: School,
-          points: 0,
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((res) => {
+          setDoc(doc(db, "Používatelia", res.user.uid), {
+            id: res.user.uid,
+            first_name: Name,
+            last_name: LastName,
+            email: email,
+            role: "USER",
+            school: School,
+            points: 0,
+          });
+        })
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            showToast("Táto emailová adresa sa už používa!");
+          } else if (error.code === "auth/missing-email") {
+            showToast("Zadajte emailovú adresu!");
+          } else if (error.code === "auth/invalid-email") {
+            showToast("Emailová adresa chýba alebo je neplatná!");
+          } else if (error.code === "auth/internal-error") {
+            showToast("Nastala chyba, skúste to neskôr!");
+          } else if (error.code === "auth/weak-password") {
+            showToast("Heslo musí obsahovať aspoň 6 znakov!");
+          }
+          console.error(error);
         });
-      })
-      .catch((error) => {
-        if (error.code === "auth/email-already-in-use") {
-          showToast("Táto emailová adresa sa už používa!");
-        } else if (error.code === "auth/missing-email") {
-          showToast("Zadajte emailovú adresu!");
-        } else if (error.code === "auth/invalid-email") {
-          showToast("Emailová adresa chýba alebo je neplatná!");
-        } else if (error.code === "auth/internal-error") {
-          showToast("Nastala chyba, skúste to neskôr!");
-        } else if (error.code === "auth/weak-password") {
-          showToast("Heslo musí obsahovať aspoň 6 znakov!");
-        }
-        console.error(error);
-      });
+    }
   };
 
   return (
@@ -110,6 +115,14 @@ const RegisterScreen = () => {
               placeholderTextColor={"#B6B4B4"}
               value={password}
               onChangeText={(text) => setPassword(text)}
+              style={styles.input}
+              secureTextEntry
+            />
+            <TextInput
+              placeholder="Zopakovať heslo"
+              placeholderTextColor={"#B6B4B4"}
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
               style={styles.input}
               secureTextEntry
             />
