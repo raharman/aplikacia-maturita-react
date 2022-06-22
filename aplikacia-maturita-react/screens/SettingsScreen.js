@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Switch, Text } from "react-native";
+import { StyleSheet, View, Switch, Text, Appearance } from "react-native";
+
+let theme = { curr: "light", isSet: false };
+export { theme };
 
 const SettingsScreen = () => {
   const [isEnabledN, setIsEnabledN] = useState(false);
   const toggleNotification = () =>
     setIsEnabledN((previousState) => !previousState);
 
-  const [isEnabledM, setIsEnabledM] = useState(false);
-  const toggleDarkMode = () => setIsEnabledM((previousState) => !previousState);
+  const [isEnabledM, setIsEnabledM] = useState(
+    theme.curr == "light" ? false : true
+  );
+  const toggleDarkMode = () => {
+    theme.curr = theme.curr == "light" ? "dark" : "light";
+    theme.isSet = true;
+    setIsEnabledM((previousState) => !previousState);
+  };
 
   let color1 = "white";
   let color2 = "#F0EDEE";

@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  Appearance,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -19,6 +24,7 @@ import QuizScreen from "./screens/QuizScreen";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
+import { theme } from "./screens/SettingsScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -241,6 +247,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  darkContainer: {
+    flex: 1,
+    backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
   },
