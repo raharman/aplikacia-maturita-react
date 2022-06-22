@@ -165,7 +165,10 @@ const QuizScreen = ({ route }) => {
           let correctCount = answer.question.answers.filter(
             (obj) => obj.answer === true
           ).length;
-          if (selectedCount === correctCount) score++;
+          let correctSelectedCount = answer.userAnswer.filter(
+            (obj) => obj.answer === true
+          ).length;
+          if (selectedCount === correctCount && correctSelectedCount) score++;
           /* else score += (1 / correctCount) * selectedCount; */
         }
       }
@@ -268,7 +271,14 @@ const QuizScreen = ({ route }) => {
                         let correctCount = answer.question.answers.filter(
                           (obj) => obj.answer === true
                         ).length;
-                        if (selectedCount === correctCount) return "#2ecc71";
+                        let correctSelectedCount = answer.userAnswer.filter(
+                          (obj) => obj.answer === true
+                        ).length;
+                        if (
+                          selectedCount === correctCount &&
+                          correctSelectedCount
+                        )
+                          return "#2ecc71";
                         else return "#f1f57f";
                       }
                       //Change Background color of user answers based on correctness (TrueFalse or Single Choice)
