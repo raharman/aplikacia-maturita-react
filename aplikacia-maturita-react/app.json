@@ -2,9 +2,9 @@
   "expo": {
     "name": "Maturita vo vrecku",
     "slug": "aplikacia-maturita",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/logo_512.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -16,7 +16,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "sk.maturita.vo.vrecku"
+      "bundleIdentifier": "sk.maturita.vo.vrecku",
+      "buildNumber": "3"
     },
     "android": {
       "package": "sk.maturita.vo.vrecku",
@@ -24,7 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"

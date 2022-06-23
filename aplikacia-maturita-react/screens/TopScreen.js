@@ -11,7 +11,7 @@ import {
   QuerySnapshot,
 } from "firebase/firestore";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
+import { avatarDesign } from "../components/ProfileCustomization";
 const TopScreen = () => {
   const [top, setTop] = useState([]);
 
@@ -61,9 +61,35 @@ const TopScreen = () => {
                 <Image
                   source={{
                     uri:
-                      "https://avatars.dicebear.com/api/personas/:" +
-                      user?.id +
-                      ".png",
+                      "https://avatars.dicebear.com/api/personas/:seed.png?" +
+                      "eyes[]=" +
+                      avatarDesign.eyes[user.avatarConfig.eyesIdx] +
+                      "&&" +
+                      "hair[]=" +
+                      avatarDesign.hair[user.avatarConfig.hairIdx] +
+                      "&&" +
+                      "body[]=" +
+                      avatarDesign.body[user.avatarConfig.bodyIdx] +
+                      "&&" +
+                      "mouth[]=" +
+                      avatarDesign.mouth[user.avatarConfig.mouthIdx] +
+                      "&&" +
+                      "nose[]=" +
+                      avatarDesign.nose[user.avatarConfig.noseIdx] +
+                      "&&" +
+                      "facialHair[]=" +
+                      avatarDesign.facialHair[user.avatarConfig.facialHairIdx] +
+                      "&&" +
+                      "hairColor[]=" +
+                      avatarDesign.hairColor[user.avatarConfig.hairColorIdx] +
+                      "&&" +
+                      "clothingColor[]=" +
+                      avatarDesign.clothingColor[
+                        user.avatarConfig.clothingColorIdx
+                      ] +
+                      "&&" +
+                      "skinColor[]=" +
+                      avatarDesign.skinColor[user.avatarConfig.skinColorIdx],
                   }}
                   style={[
                     styles.image,

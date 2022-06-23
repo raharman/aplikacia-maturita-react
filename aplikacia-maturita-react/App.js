@@ -108,7 +108,7 @@ export default function App() {
     return (
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName="Home"
+          initialRouteName="Profil"
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
@@ -168,7 +168,7 @@ export default function App() {
             }}
             component={ProfileScreen}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Settings"
             options={{
               tabBarShowLabel: false,
@@ -184,7 +184,7 @@ export default function App() {
               },
             }}
             component={SettingsScreen}
-          />
+          /> */}
         </Tab.Navigator>
       </NavigationContainer>
     );

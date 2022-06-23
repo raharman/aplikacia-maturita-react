@@ -30,7 +30,6 @@ const TopicScreen = ({ route }) => {
 
   useEffect(() => {
     const titleWidth = width / 21;
-
     navigation.setOptions({
       title:
         Platform.OS === "android" && title.length > titleWidth
@@ -100,6 +99,10 @@ var tagsStyles = {
   p: {
     margin: 5,
   },
-  ul: {},
-  ol: {},
+  ul: {
+    /* margin: 0, */
+  },
+  ol: {
+    /* margin: 0, */
+  },
 };

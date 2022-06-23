@@ -38,7 +38,6 @@ const SelectionScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     getTopics();
-
     navigation.setOptions({
       title: title,
       headerStyle: {
@@ -53,7 +52,7 @@ const SelectionScreen = ({ route, navigation }) => {
       headerShadowVisible: false,
       headerBackTitleVisible: false,
     });
-  }, [navigation]);
+  }, []);
 
   if (title == "Kvízy") {
     return (
