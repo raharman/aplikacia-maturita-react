@@ -63,13 +63,12 @@ const QuizScreen = ({ route }) => {
         if (question.docs && question.docs.length != 0) break;
         randomIdx = Math.floor(Math.random() * lastIdx);
         if (!usedIndexes.includes(randomIdx)) {
+          const conditions = [where("index", "==", randomIdx)];
+          if (type.toLowerCase() !== "zmiešané") {
+            conditions.push(where("topicType", "==", type.toLowerCase()));
+          }
           question = await getDocs(
-            query(
-              collection(db, "Otázky"),
-              where("index", "==", randomIdx),
-              where("topicType", "==", type.toLowerCase()),
-              limit(1)
-            )
+            query(collection(db, "Otázky"), ...conditions, limit(1))
           );
           usedIndexes.unshift(randomIdx);
         }
@@ -112,8 +111,6 @@ const QuizScreen = ({ route }) => {
     const quiz = [];
 
     let chooser = randomNoRepeats(availableQuestions);
-
-    //VYRIESIT 2 ROVNAKE
     for (let i = 0; i < count; i++) {
       let question = chooser();
 
@@ -136,7 +133,7 @@ const QuizScreen = ({ route }) => {
       }
     }
 
-    console.log(quiz);
+    /* console.log(quiz); */
 
     setQuiz(quiz);
     setCurrentQuestion(quiz[0]);
@@ -161,9 +158,9 @@ const QuizScreen = ({ route }) => {
   }
 
   function updateAnswer(answer) {
-    console.log(answer);
-    setAnswers([
-      ...answers,
+    /* console.log(answer); */
+    setAnswers((prevAnswers) => [
+      ...prevAnswers,
       {
         question: currentQuestion,
         userAnswer: answer,
@@ -259,7 +256,7 @@ const QuizScreen = ({ route }) => {
   }
 
   if (Index === quiz.length - 1) {
-    console.log(answers);
+    /* console.log(answers); */
 
     let score = calculateScore();
 

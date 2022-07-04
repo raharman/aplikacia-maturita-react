@@ -30,16 +30,15 @@ const TopScreen = () => {
   }, []); */
 
   const q = query(topCollectionRef, orderBy("points", "desc"), limit(5));
-  const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    let docs = [];
-    querySnapshot.forEach((doc) => {
-      docs.push({ ...doc.data(), id: doc.id });
-    });
-    setTop(docs);
-  });
 
   useEffect(() => {
-    return unsubscribe;
+    return onSnapshot(q, (querySnapshot) => {
+      let docs = [];
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...doc.data(), id: doc.id });
+      });
+      setTop(docs);
+    });
   }, []);
 
   return (

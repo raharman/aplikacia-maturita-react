@@ -103,6 +103,7 @@ export const MultipleChoice = (props) => {
           style={styles.nextButton}
           onPress={() => {
             props.updateAnswer(selected);
+            setSelected([]);
             props.handleNextQuestion();
           }}
         >

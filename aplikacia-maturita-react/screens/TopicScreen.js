@@ -24,9 +24,13 @@ const TopicScreen = ({ route }) => {
 
   const [topic, setTopic] = useState([]);
 
-  onSnapshot(docRef, (doc) => {
-    setTopic(doc.data());
-  });
+  useEffect(
+    () =>
+      onSnapshot(docRef, (doc) => {
+        setTopic(doc.data());
+      }),
+    []
+  );
 
   useEffect(() => {
     const titleWidth = width / 21;
