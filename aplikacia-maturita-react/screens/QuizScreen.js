@@ -8,11 +8,24 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+  getDoc,
+  query,
+  startAt,
+  limit,
+  orderBy,
+  documentId,
+  where,
+} from "firebase/firestore";
 import { Choice, Matrix, MultipleChoice } from "../components/Questions";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import "react-native-reanimated";
+import Loader from "react-native-three-dots-loader";
 
 let Index = 0;
 
@@ -21,23 +34,53 @@ const QuizScreen = ({ route }) => {
 
   const { count, type } = route.params;
 
-  const collectionRef = collection(db, "Otázky");
+  // const collectionRef = collection(db, "Otázky");
 
   const [isLoading, setLoading] = useState(true);
   const [quiz, setQuiz] = useState();
   const [currentQuestion, setCurrentQuestion] = useState();
   const [answers, setAnswers] = useState([]);
 
+  async function getLastIndex(dbObject, collectionName) {
+    const queryHandler = query(
+      collection(dbObject, collectionName),
+      orderBy("index", "desc"),
+      limit(1)
+    );
+    const data = await getDocs(queryHandler);
+    if (data.docs.length == 0) throw Error("Incorrect query");
+    return data.docs[0].data().index;
+  }
   const getQuiz = async () => {
-    const data = await getDocs(collectionRef);
+    const quiz = [];
+    const lastIdx = await getLastIndex(db, "Otázky");
+    let usedIndexes = [];
+    let randomIdx = 0;
+    let question = {};
 
-    const availableQuestions = [];
+    for (let index = 0; index < count; index++) {
+      while (true) {
+        if (question.docs && question.docs.length != 0) break;
+        randomIdx = Math.floor(Math.random() * lastIdx);
+        if (!usedIndexes.includes(randomIdx)) {
+          const conditions = [where("index", "==", randomIdx)];
+          if (type.toLowerCase() !== "zmiešané") {
+            conditions.push(where("topicType", "==", type.toLowerCase()));
+          }
+          question = await getDocs(
+            query(collection(db, "Otázky"), ...conditions, limit(1))
+          );
+          usedIndexes.unshift(randomIdx);
+        }
+      }
+      question = question.docs[0];
+      quiz.push({ ...question.data(), questionId: question.id });
+    }
 
-    data.docs.map((doc) => {
-      availableQuestions.push(doc.data());
-    });
-
-    createQuiz(availableQuestions);
+    console.log(quiz);
+    setQuiz(quiz);
+    setCurrentQuestion(quiz[0]);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -51,35 +94,46 @@ const QuizScreen = ({ route }) => {
     });
   }, [navigation]);
 
+  function randomNoRepeats(array) {
+    var copy = array.slice(0);
+    return function () {
+      if (copy.length < 1) {
+        copy = array.slice(0);
+      }
+      var index = Math.floor(Math.random() * copy.length);
+      var item = copy[index];
+      copy.splice(index, 1);
+      return item;
+    };
+  }
+
   function createQuiz(availableQuestions) {
     const quiz = [];
 
-    //VYRIESIT 2 ROVNAKE
+    let chooser = randomNoRepeats(availableQuestions);
     for (let i = 0; i < count; i++) {
-      let question =
-        availableQuestions[
-          Math.floor(Math.random() * availableQuestions.length) + 0
-        ];
+      let question = chooser();
 
       if (type === "zmiešané") {
         quiz.push(question);
       } else {
         if (question.topicType.toLowerCase() === type.toLowerCase()) {
-          quiz.push(question);
+          if (question.type.toLowerCase() === "matrix") {
+            quiz.push(question);
+          }
         } else {
           while (true) {
-            if (question.topicType.toLowerCase() === type.toLowerCase()) break;
-            question =
-              availableQuestions[
-                Math.floor(Math.random() * availableQuestions.length) + 0
-              ];
+            if (question.topicType.toLowerCase() === type.toLowerCase()) {
+              if (question.type.toLowerCase() === "matrix") break;
+            }
+            question = chooser();
           }
           quiz.push(question);
         }
       }
     }
 
-    console.log(quiz);
+    /* console.log(quiz); */
 
     setQuiz(quiz);
     setCurrentQuestion(quiz[0]);
@@ -104,9 +158,9 @@ const QuizScreen = ({ route }) => {
   }
 
   function updateAnswer(answer) {
-    console.log(answer);
-    setAnswers([
-      ...answers,
+    /* console.log(answer); */
+    setAnswers((prevAnswers) => [
+      ...prevAnswers,
       {
         question: currentQuestion,
         userAnswer: answer,
@@ -120,7 +174,14 @@ const QuizScreen = ({ route }) => {
   }
 
   function renderAnswers() {
-    currentQuestion.answers = shuffleOptions(currentQuestion.answers);
+    if (currentQuestion.type === "matrix") {
+      currentQuestion.options.left = shuffleOptions(
+        currentQuestion.options.left
+      );
+      currentQuestion.options.right = shuffleOptions(
+        currentQuestion.options.right
+      );
+    } else currentQuestion.answers = shuffleOptions(currentQuestion.answers);
 
     if (
       currentQuestion.type === "trueFalse" ||
@@ -142,10 +203,7 @@ const QuizScreen = ({ route }) => {
         />
       );
     } else {
-      return handleNextQuestion();
-      {
-        /* <Matrix options={currentQuestion.answers} />; */
-      }
+      return <Matrix options={currentQuestion.options} />;
     }
   }
 
@@ -165,7 +223,14 @@ const QuizScreen = ({ route }) => {
           let correctCount = answer.question.answers.filter(
             (obj) => obj.answer === true
           ).length;
-          if (selectedCount === correctCount) score++;
+          let correctSelectedCount = answer.userAnswer.filter(
+            (obj) => obj.answer === true
+          ).length;
+          if (
+            selectedCount === correctCount &&
+            correctCount === correctSelectedCount
+          )
+            score++;
           /* else score += (1 / correctCount) * selectedCount; */
         }
       }
@@ -175,11 +240,23 @@ const QuizScreen = ({ route }) => {
   }
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        {<Loader />}
+      </View>
+    );
   }
 
   if (Index === quiz.length - 1) {
-    console.log(answers);
+    /* console.log(answers); */
 
     let score = calculateScore();
 
@@ -197,19 +274,33 @@ const QuizScreen = ({ route }) => {
           <AnimatedCircularProgress
             size={150}
             width={15}
-            fill={parseInt((score / answers.length) * 100, 10)}
+            fill={Math.round((score / answers.length) * 100)}
             tintColor="#2ecc71"
             backgroundColor="#c5c9c9"
           >
             {(fill) => (
               <Text style={{ fontSize: 32, fontWeight: "bold" }}>
-                {(score / answers.length) * 100 + " %"}
+                {Math.round((score / answers.length) * 100) + " %"}
               </Text>
             )}
           </AnimatedCircularProgress>
         </View>
         <Text style={styles.finalText}>
           Správne {score} z {answers.length} otázok
+          {/* 
+          
+          Pripočítavanie skóre 
+          
+          */}
+          {(() => {
+            getDoc(doc(db, "Používatelia", auth.currentUser.uid)).then(
+              (document) =>
+                setDoc(doc(db, "Používatelia", auth.currentUser.uid), {
+                  ...document.data(),
+                  points: document.data().points + score,
+                })
+            );
+          })()}
         </Text>
 
         {/* 
@@ -254,7 +345,14 @@ const QuizScreen = ({ route }) => {
                         let correctCount = answer.question.answers.filter(
                           (obj) => obj.answer === true
                         ).length;
-                        if (selectedCount === correctCount) return "#2ecc71";
+                        let correctSelectedCount = answer.userAnswer.filter(
+                          (obj) => obj.answer === true
+                        ).length;
+                        if (
+                          selectedCount === correctCount &&
+                          correctCount === correctSelectedCount
+                        )
+                          return "#2ecc71";
                         else return "#f1f57f";
                       }
                       //Change Background color of user answers based on correctness (TrueFalse or Single Choice)

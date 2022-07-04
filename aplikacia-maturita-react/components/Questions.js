@@ -103,6 +103,7 @@ export const MultipleChoice = (props) => {
           style={styles.nextButton}
           onPress={() => {
             props.updateAnswer(selected);
+            setSelected([]);
             props.handleNextQuestion();
           }}
         >
@@ -113,27 +114,27 @@ export const MultipleChoice = (props) => {
   );
 };
 
+const MatrixAnswer = (props) => {
+  return (
+    <TouchableOpacity style={styles.button}>
+      <Text style={styles.answer}> {props.text}</Text>
+    </TouchableOpacity>
+  );
+};
+
 export const Matrix = (props) => {
   const [selected, setSelected] = useState([]);
 
-  const leftAnswers = [];
-  const rightAnswers = [];
-
-  props.options.map((option) => {
-    leftAnswers.push(option.answer[0]);
-    rightAnswers.push(option.text);
-  });
-
   const colors = [];
 
-  for (let index = 0; index < leftAnswers.length; index++) {
+  for (let index = 0; index < props.options.left.length; index++) {
     //colors.push(Math.floor(Math.random() * 16777215).toString(16));
     colors.push(getRandomColor());
   }
 
-  return leftAnswers.map((answer, key) => {
+  return props.options.left.map((answer, key) => {
     return (
-      <View>
+      <View key={key}>
         <View
           style={{
             flexDirection: "row",
@@ -145,16 +146,14 @@ export const Matrix = (props) => {
           <View style={{ flex: 1, marginRight: 10 }}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                console.log();
-              }}
+              onPress={() => console.log(answer.text)}
             >
-              <Text style={styles.answer}>{answer}</Text>
+              <Text style={styles.answer}>{answer.text}</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }}>
-            <TouchableOpacity style={styles.button} onPress={() => {}}>
-              <Text style={styles.answer}>{rightAnswers[key]}</Text>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.answer}>{props.options.right[key].text}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -162,6 +161,10 @@ export const Matrix = (props) => {
     );
   });
 };
+
+function handleMatrix(event) {
+  console.log(event.target.dataset.text);
+}
 
 function getRandomColor() {
   var letters = "0123456789ABCDEF".split("");

@@ -13,6 +13,12 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "r.harbulak3@gmail.com",
+        "ascAppId": "1630941568",
+        "appleTeamId": "9WSNN4537S"
+      }
+    }
   }
 }

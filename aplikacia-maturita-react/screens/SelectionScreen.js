@@ -12,9 +12,13 @@ import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { SearchBar } from "@rneui/themed";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SelectionScreen = ({ route, navigation }) => {
   const { title } = route.params;
+
+  const getStorageKey = () => `topics-${title}`;
+  const getStorageKeyForValidity = () => `topics-${title}-validity`;
 
   const [topics, setTopics] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
@@ -25,9 +29,35 @@ const SelectionScreen = ({ route, navigation }) => {
   const topicsCollectionRef = collection(db, title);
 
   const getTopics = async () => {
-    const data = await getDocs(topicsCollectionRef);
-    setTopics(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    setQuizzes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const storageKey = getStorageKey();
+    const validityKey = getStorageKeyForValidity();
+    const offlineTopics = await AsyncStorage.getItem(storageKey);
+    const validityDateString = await AsyncStorage.getItem(validityKey);
+    let data;
+    if (isInvalid(validityDateString, offlineTopics)) {
+      data = await getDocs(topicsCollectionRef);
+      data = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      await AsyncStorage.setItem(storageKey, JSON.stringify(data));
+      const now = new Date();
+      const validUntil = new Date(now.setMinutes(now.getMinutes() + 30));
+      await AsyncStorage.setItem(validityKey, validUntil.getTime().toString());
+    } else {
+      data = JSON.parse(offlineTopics);
+    }
+    setTopics(data);
+  };
+
+  const isInvalid = (validityDateString, offlineTopics) => {
+    if (
+      offlineTopics == null ||
+      JSON.parse(offlineTopics).length == 0 ||
+      validityDateString == null
+    ) {
+      return true;
+    }
+    const validityDate = new Date(+JSON.parse(validityDateString));
+    const now = new Date();
+    return validityDate < now;
   };
 
   const [search, setSearch] = useState("");
@@ -38,7 +68,6 @@ const SelectionScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     getTopics();
-
     navigation.setOptions({
       title: title,
       headerStyle: {
@@ -53,7 +82,7 @@ const SelectionScreen = ({ route, navigation }) => {
       headerShadowVisible: false,
       headerBackTitleVisible: false,
     });
-  }, [navigation]);
+  }, []);
 
   if (title == "Kvízy") {
     return (

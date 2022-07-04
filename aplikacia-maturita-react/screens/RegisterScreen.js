@@ -16,12 +16,14 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import { Picker } from "@react-native-picker/picker";
+import { avatarDesign } from "../components/ProfileCustomization";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [Name, setName] = useState("");
   const [LastName, setLastName] = useState("");
   const [School, setSchool] = useState("GPH");
@@ -44,59 +46,83 @@ const RegisterScreen = () => {
   }, []);
 
   const SignUp = () => {
-    if (!(email && password && Name && LastName && School))
-      return showToast("Všetky polia musia byť vyplnené!");
+    if (password !== confirmPassword) {
+      showToast("Heslá sa nezhodujú!");
+    } else {
+      if (!(email && password && Name && LastName && School))
+        return showToast("Všetky polia musia byť vyplnené!");
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        setDoc(doc(db, "Používatelia", res.user.uid), {
-          id: res.user.uid,
-          first_name: Name,
-          last_name: LastName,
-          email: email,
-          role: "USER",
-          school: School,
-          points: 0,
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((res) => {
+          setDoc(doc(db, "Používatelia", res.user.uid), {
+            id: res.user.uid,
+            first_name: Name,
+            last_name: LastName,
+            email: email,
+            role: "USER",
+            school: School,
+            points: 0,
+            avatarConfig: {
+              eyesIdx: Math.floor(Math.random() * avatarDesign.eyes.length),
+              hairIdx: Math.floor(Math.random() * avatarDesign.hair.length),
+              bodyIdx: Math.floor(Math.random() * avatarDesign.body.length),
+              mouthIdx: Math.floor(Math.random() * avatarDesign.mouth.length),
+              noseIdx: Math.floor(Math.random() * avatarDesign.nose.length),
+              facialHairIdx: Math.floor(
+                Math.random() * avatarDesign.facialHair.length
+              ),
+              hairColorIdx: Math.floor(
+                Math.random() * avatarDesign.hairColor.length
+              ),
+              clothingColorIdx: Math.floor(
+                Math.random() * avatarDesign.clothingColor.length
+              ),
+              skinColorIdx: Math.floor(
+                Math.random() * avatarDesign.skinColor.length
+              ),
+            },
+          });
+        })
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            showToast("Táto emailová adresa sa už používa!");
+          } else if (error.code === "auth/missing-email") {
+            showToast("Zadajte emailovú adresu!");
+          } else if (error.code === "auth/invalid-email") {
+            showToast("Emailová adresa chýba alebo je neplatná!");
+          } else if (error.code === "auth/internal-error") {
+            showToast("Nastala chyba, skúste to neskôr!");
+          } else if (error.code === "auth/weak-password") {
+            showToast("Heslo musí obsahovať aspoň 6 znakov!");
+          }
+          console.error(error);
         });
-      })
-      .catch((error) => {
-        if (error.code === "auth/email-already-in-use") {
-          showToast("Táto emailová adresa sa už používa!");
-        } else if (error.code === "auth/missing-email") {
-          showToast("Zadajte emailovú adresu!");
-        } else if (error.code === "auth/invalid-email") {
-          showToast("Emailová adresa chýba alebo je neplatná!");
-        } else if (error.code === "auth/internal-error") {
-          showToast("Nastala chyba, skúste to neskôr!");
-        } else if (error.code === "auth/weak-password") {
-          showToast("Heslo musí obsahovať aspoň 6 znakov!");
-        }
-
-        console.error(error);
-      });
+    }
   };
-
+  {
+    /* <KeyboardAvoidingView
+        enabled
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        style={{
+          height: "100%",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      > */
+  }
   return (
-    <KeyboardAvoidingView
-      enabled
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      style={{
-        height: "100%",
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-          {Platform.OS !== "android" ? (
-            <Image
-              source={require("../assets/images/logo.png")}
-              resizeMode="contain"
-              style={styles.image}
-            />
-          ) : null}
-          <Text style={styles.welcomeHeader}> Registrácia </Text>
+    <View style={styles.container}>
+      {Platform.OS !== "android" ? (
+        <Image
+          source={require("../assets/images/logo.png")}
+          resizeMode="contain"
+          style={styles.image}
+        />
+      ) : null}
+      <Text style={styles.welcomeHeader}> Registrácia </Text>
+      <ScrollView>
+        <View style={{ alignContent: "center", alignItems: "center" }}>
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="Email"
@@ -104,12 +130,21 @@ const RegisterScreen = () => {
               value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
+              keyboardType="email-address"
             />
             <TextInput
               placeholder="Heslo"
               placeholderTextColor={"#B6B4B4"}
               value={password}
               onChangeText={(text) => setPassword(text)}
+              style={styles.input}
+              secureTextEntry
+            />
+            <TextInput
+              placeholder="Zopakovať heslo"
+              placeholderTextColor={"#B6B4B4"}
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
               style={styles.input}
               secureTextEntry
             />
@@ -137,13 +172,22 @@ const RegisterScreen = () => {
               onValueChange={(School) => setSchool(School)}
             >
               <Picker.Item
-                label="Gymnázium Pavla Horova"
+                label="Gymnázium Pavla Horova, Michalovce"
                 value="GPH"
-              ></Picker.Item>
+              />
               <Picker.Item
-                label="Gymnázium Ľudovíta Štúra"
+                label="Gymnázium Ľudovíta Štúra, Michalovce"
                 value="GĽŠ"
-              ></Picker.Item>
+              />
+              <Picker.Item
+                label="Stredná odborná škola technická, Michalovce"
+                value="SOSTMI"
+              />
+              <Picker.Item label="Obchodná akadémia, Michalovce" value="OAMI" />
+              <Picker.Item
+                label="Stredná odborná škola obchodu a služieb, Michalovce"
+                value="SOSMI"
+              />
             </Picker>
           </View>
 
@@ -156,7 +200,7 @@ const RegisterScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -164,7 +208,7 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: "15%",
+    marginTop: "5%",
     flex: 1,
     alignItems: "center",
   },
@@ -210,7 +254,7 @@ const styles = StyleSheet.create({
   image: {
     alignSelf: "center",
     width: "80%",
-    height: "45%",
+    height: "30%",
   },
   welcomeHeader: {
     color: "rgba(51,51,51,1)",
@@ -230,10 +274,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "rgb(182,180,180)",
     borderWidth: 1,
-    width: 325,
+    width: 350,
   },
   scrollContainer: {
     alignSelf: "center",
-    height: "100%",
+    /* height: "100%", */
   },
 });

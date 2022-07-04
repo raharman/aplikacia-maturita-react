@@ -24,13 +24,16 @@ const TopicScreen = ({ route }) => {
 
   const [topic, setTopic] = useState([]);
 
-  onSnapshot(docRef, (doc) => {
-    setTopic(doc.data());
-  });
+  useEffect(
+    () =>
+      onSnapshot(docRef, (doc) => {
+        setTopic(doc.data());
+      }),
+    []
+  );
 
   useEffect(() => {
     const titleWidth = width / 21;
-
     navigation.setOptions({
       title:
         Platform.OS === "android" && title.length > titleWidth
@@ -48,9 +51,9 @@ const TopicScreen = ({ route }) => {
     type == "Literatúra" ? "rgba(205, 57, 88, 0.48)" : "#333f58";
 
   if (Platform.OS === "android") {
-    tagsStyles.p.width = 320;
-    tagsStyles.ul.width = 320;
-    tagsStyles.ol.width = 320;
+    tagsStyles.p.width = 300;
+    tagsStyles.ul.width = 300;
+    tagsStyles.ol.width = 300;
   }
 
   return (
@@ -100,6 +103,10 @@ var tagsStyles = {
   p: {
     margin: 5,
   },
-  ul: {},
-  ol: {},
+  ul: {
+    /* margin: 0, */
+  },
+  ol: {
+    /* margin: 0, */
+  },
 };
