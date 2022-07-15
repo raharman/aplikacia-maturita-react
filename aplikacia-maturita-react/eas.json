@@ -18,6 +18,9 @@
         "appleId": "r.harbulak3@gmail.com",
         "ascAppId": "1630941568",
         "appleTeamId": "9WSNN4537S"
+      },
+      "android": {
+        "serviceAccountKeyPath": "C:/Users/admin/Desktop/pc-api-9052417874427262640-378-159c515cbd3a.json"
       }
     }
   }

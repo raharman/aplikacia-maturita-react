@@ -1,6 +1,6 @@
 import { auth, db } from "../firebase";
-import { signOut } from "firebase/auth";
-import { doc, onSnapshot, getDoc, setDoc } from "firebase/firestore";
+import { signOut, deleteUser, getAuth } from "firebase/auth";
+import { doc, onSnapshot, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import {
   StyleSheet,
   Text,
@@ -21,6 +21,8 @@ const ProfileScreen = () => {
   const docRef = doc(db, "Používatelia", auth.currentUser.uid);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [modal2Visible, setModal2Visible] = useState(false);
+  const [modal3Visible, setModal3Visible] = useState(false);
 
   const [eyesIndex, setEyesIndex] = useState(0);
   const [hairIndex, setHairIndex] = useState(0);
@@ -75,6 +77,11 @@ const ProfileScreen = () => {
       }
       setState(state - 1);
     }
+  }
+
+  function handleAccountDeletion() {
+    deleteDoc(doc(db, "Používatelia", auth.currentUser.uid));
+    deleteUser(auth.currentUser);
   }
 
   return (
@@ -132,10 +139,10 @@ const ProfileScreen = () => {
         </View>
 
         <TouchableOpacity
-          style={styles.logoutContainer}
+          style={[styles.logoutContainer, { width: 200 }]}
           onPress={() => setModalVisible(!modalVisible)}
         >
-          <Text style={styles.logoutText}>Upaviť postavičku</Text>
+          <Text style={styles.logoutText}>Upraviť postavičku</Text>
         </TouchableOpacity>
 
         <Modal
@@ -566,9 +573,152 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </Modal>
 
-        <TouchableOpacity style={styles.logoutContainer} onPress={SignOut}>
+        {/* Vymazanie uctu */}
+
+        <TouchableOpacity
+          style={[
+            styles.logoutContainer,
+            { width: 200, backgroundColor: "#bf1733" },
+          ]}
+          onPress={() => setModal3Visible(!modal3Visible)}
+        >
+          <Text style={styles.logoutText}>Vymazať účet</Text>
+        </TouchableOpacity>
+
+        <Modal
+          isVisible={modal3Visible}
+          style={{ backgroundColor: "#E1E1E1", margin: 0 }}
+          deviceWidth={windowWidth}
+          deviceHeight={windowHeight}
+        >
+          <View>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+                color: "white",
+                marginRight: "auto",
+                marginLeft: "auto",
+                backgroundColor: "#bf1733",
+                borderRadius: 16,
+                padding: 12,
+              }}
+            >
+              Vymazanie účtu
+            </Text>
+          </View>
+
+          <View>
+            <Text
+              style={{
+                fontSize: 24,
+                marginHorizontal: 25,
+                marginVertical: 10,
+                textAlign: "auto",
+              }}
+            >
+              Potvrdením sa vymažu všetky vaše profilové dáta vrátane skóre,
+              táto akcia je nevratná!
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.logoutContainer, { backgroundColor: "#bf1733" }]}
+            onPress={() => {
+              handleAccountDeletion();
+            }}
+          >
+            <Text style={styles.logoutText}>Potvrdiť</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.logoutContainer}
+            onPress={() => {
+              setModal3Visible(!modal3Visible);
+            }}
+          >
+            <Text style={styles.logoutText}>Zatvoriť</Text>
+          </TouchableOpacity>
+        </Modal>
+
+        <TouchableOpacity
+          style={[styles.logoutContainer, { width: 200 }]}
+          onPress={SignOut}
+        >
           <Text style={styles.logoutText}>Odhlásiť sa</Text>
         </TouchableOpacity>
+
+        {/* Info o aplikacii */}
+
+        <TouchableOpacity
+          style={[styles.logoutContainer, { width: 200 }]}
+          onPress={() => setModal2Visible(!modal2Visible)}
+        >
+          <Text style={styles.logoutText}>O aplikácii</Text>
+        </TouchableOpacity>
+
+        <Modal
+          isVisible={modal2Visible}
+          style={{ backgroundColor: "#E1E1E1", margin: 0 }}
+          deviceWidth={windowWidth}
+          deviceHeight={windowHeight}
+        >
+          <View>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+                color: "white",
+                marginRight: "auto",
+                marginLeft: "auto",
+                backgroundColor: "rgba(44,92,120,1)",
+                borderRadius: 16,
+                padding: 12,
+              }}
+            >
+              Náš tím
+            </Text>
+          </View>
+
+          <View>
+            <Text
+              style={{
+                fontSize: 16,
+                marginHorizontal: 25,
+                marginVertical: 10,
+              }}
+            >
+              Sme 7-členný tím študentov gymnázia, ktorí sa vo voľnom čase
+              venujú vývoju našej aplikácie.
+            </Text>
+            <Text
+              style={{ fontSize: 16, marginHorizontal: 25, marginVertical: 10 }}
+            >
+              Programovaniu sa venujeme dvaja, konkrétne Radoslav Harbuľák a
+              Vladimír Jančár.
+            </Text>
+            <Text
+              style={{ fontSize: 16, marginHorizontal: 25, marginVertical: 10 }}
+            >
+              Spracovanie tém má na starosti Viktor Roháč, Filip Fečik, Jana
+              Mária Žeňuchová a Filip Ivan.
+            </Text>
+            <Text
+              style={{ fontSize: 16, marginHorizontal: 25, marginVertical: 10 }}
+            >
+              O grafické návrhy sa postaral Lukáš Hrobák.
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.logoutContainer}
+            onPress={() => {
+              setModal2Visible(!modal2Visible);
+            }}
+          >
+            <Text style={styles.logoutText}>Zatvoriť</Text>
+          </TouchableOpacity>
+        </Modal>
       </View>
     </ScrollView>
   );
